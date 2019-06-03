@@ -17,7 +17,44 @@ namespace C969_Project
             InitializeComponent();
           
         }
-        
+
+        private void createCusButton_Click(object sender, EventArgs e)
+        {
+            Form createCust = new CreateCustomer();
+            createCust.Owner = this;
+            createCust.Show();
+            this.Hide();
+        }
+
+        private void updateCusButton_Click(object sender, EventArgs e)
+        {
+            Form updateCust = new UpdateCustomer();
+            updateCust.Owner = this;
+            updateCust.Show();
+            this.Hide();
+        }
+
+        private void deleteCusButton_Click(object sender, EventArgs e)
+        {
+            Form deleteCust = new DeleteCustomer();
+            deleteCust.Owner = this;
+            deleteCust.Show();
+            this.Hide();
+        }
+
+        private void numApptButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void schedButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cusReportButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-    
 }
