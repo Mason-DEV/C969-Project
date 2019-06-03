@@ -10,11 +10,14 @@ using System.Windows.Forms;
 
 namespace C969_Project
 {
-    public partial class Form1 : Form
+    public partial class Dashboard : Form
     {
-        public Form1()
+        public Dashboard()
         {
             InitializeComponent();
+          
         }
+        
     }
+    
 }
