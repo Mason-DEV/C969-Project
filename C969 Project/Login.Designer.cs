@@ -58,6 +58,7 @@
             // 
             // userTextbox
             // 
+            this.userTextbox.BackColor = System.Drawing.Color.White;
             this.userTextbox.Location = new System.Drawing.Point(190, 64);
             this.userTextbox.Name = "userTextbox";
             this.userTextbox.Size = new System.Drawing.Size(100, 20);
@@ -111,6 +112,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(391, 246);
             this.Controls.Add(this.infoLabel);
             this.Controls.Add(this.cancelButton);

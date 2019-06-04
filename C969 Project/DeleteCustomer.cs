@@ -16,5 +16,11 @@ namespace C969_Project
         {
             InitializeComponent();
         }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            this.Owner.Show();
+            this.Hide();
+        }
     }
 }
