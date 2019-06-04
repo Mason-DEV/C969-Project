@@ -44,7 +44,7 @@ namespace C969_Project
             this.updateCusButton = new System.Windows.Forms.Button();
             this.createCusButton = new System.Windows.Forms.Button();
             this.reportsGroupbox = new System.Windows.Forms.GroupBox();
-            this.cusReportButton = new System.Windows.Forms.Button();
+            this.loginsReportButton = new System.Windows.Forms.Button();
             this.schedButton = new System.Windows.Forms.Button();
             this.numApptButton = new System.Windows.Forms.Button();
             this.apptGroupbox.SuspendLayout();
@@ -213,7 +213,7 @@ namespace C969_Project
             // 
             // reportsGroupbox
             // 
-            this.reportsGroupbox.Controls.Add(this.cusReportButton);
+            this.reportsGroupbox.Controls.Add(this.loginsReportButton);
             this.reportsGroupbox.Controls.Add(this.schedButton);
             this.reportsGroupbox.Controls.Add(this.numApptButton);
             this.reportsGroupbox.ForeColor = System.Drawing.Color.RoyalBlue;
@@ -224,19 +224,19 @@ namespace C969_Project
             this.reportsGroupbox.TabStop = false;
             this.reportsGroupbox.Text = "Reports";
             // 
-            // cusReportButton
+            // loginsReportButton
             // 
-            this.cusReportButton.BackColor = System.Drawing.Color.RoyalBlue;
-            this.cusReportButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cusReportButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cusReportButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.cusReportButton.Location = new System.Drawing.Point(312, 38);
-            this.cusReportButton.Name = "cusReportButton";
-            this.cusReportButton.Size = new System.Drawing.Size(121, 31);
-            this.cusReportButton.TabIndex = 5;
-            this.cusReportButton.Text = "Customer Report";
-            this.cusReportButton.UseVisualStyleBackColor = false;
-            this.cusReportButton.Click += new System.EventHandler(this.cusReportButton_Click);
+            this.loginsReportButton.BackColor = System.Drawing.Color.RoyalBlue;
+            this.loginsReportButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.loginsReportButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.loginsReportButton.ForeColor = System.Drawing.SystemColors.Control;
+            this.loginsReportButton.Location = new System.Drawing.Point(312, 38);
+            this.loginsReportButton.Name = "loginsReportButton";
+            this.loginsReportButton.Size = new System.Drawing.Size(121, 31);
+            this.loginsReportButton.TabIndex = 5;
+            this.loginsReportButton.Text = "Logins Report";
+            this.loginsReportButton.UseVisualStyleBackColor = false;
+            this.loginsReportButton.Click += new System.EventHandler(this.cusReportButton_Click);
             // 
             // schedButton
             // 
@@ -300,7 +300,7 @@ namespace C969_Project
         private System.Windows.Forms.Button createCusButton;
         private System.Windows.Forms.Button updateCusButton;
         private System.Windows.Forms.Button deleteCusButton;
-        private System.Windows.Forms.Button cusReportButton;
+        private System.Windows.Forms.Button loginsReportButton;
         private System.Windows.Forms.Button schedButton;
         private System.Windows.Forms.Button numApptButton;
         private System.Windows.Forms.RadioButton monthViewRadio;

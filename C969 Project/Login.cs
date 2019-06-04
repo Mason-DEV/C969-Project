@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,25 +15,50 @@ namespace C969_Project
     {
 
         public string error = "The username and password entered are not valid.";
-
+        public string exit = "Are you sure to exit this Application?";
         public Login()
         {
             InitializeComponent();
-            //Do something to lookup user location and translate log0in and error control messages; 
+            //Supports English or Italian(LCID == 2058);
+            languageCheck(CultureInfo.CurrentUICulture.LCID);
+            //languageCheck(2058);
         }
+
+        private void languageCheck(int LCID)
+        {
+            if (LCID == 2058)
+            {
+                this.Text = "Accesso";
+                infoLabel.Text = "Inserisci le informazioni di accesso";
+                usernameLabel.Text = "Nome utente";
+                passwordLabel.Text = "Parola d'ordine";
+                loginButton.Text = "Accesso";
+                cancelButton.Text = "Annulla";
+                error = "Il nome utente e la password inseriti non sono validi.";
+                exit = "sei sicuro di uscire da questa Applicazione?";
+            }
+        }
+
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            Form dash = new Dashboard();
-            dash.Owner = this;
-            dash.Show();
-            this.Hide();
-         
+            if (userTextbox.Text == "")
+            {
+                MessageBox.Show(error);
+            }
+            else
+            {
+                Form dash = new Dashboard();
+                dash.Owner = this;
+                dash.Show();
+                this.Hide();
+            }
+
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
         {
-            var confirm = MessageBox.Show("Are you sure to exit this Application?", "Login",
+            var confirm = MessageBox.Show(exit, this.Text,
                                    MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes)
             {
