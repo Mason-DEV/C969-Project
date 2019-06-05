@@ -15,7 +15,7 @@ namespace C969_Project
         public Dashboard()
         {
             InitializeComponent();
-          
+            this.FormClosing += Dashboard_FormClosing;
         }
 
         private void createCusButton_Click(object sender, EventArgs e)
@@ -55,6 +55,11 @@ namespace C969_Project
         private void cusReportButton_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Dashboard_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Logger.signOut(DBHelper.getCurrentUserName());
         }
     }
 }

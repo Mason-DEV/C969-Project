@@ -42,17 +42,21 @@ namespace C969_Project
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            if (userTextbox.Text == "")
+            //Call to DB to make sure user and pass are correct
+            if (DBHelper.userCheck(userTextbox.Text, passTextbox.Text) == 1)
             {
-                MessageBox.Show(error);
-            }
-            else
-            {
+                //Log in text file username and time of login
+                Logger.signIn(DBHelper.getCurrentUserName());
+                //Show Dashboard
                 Form dash = new Dashboard();
-                dash.Owner = this;
                 dash.Show();
                 this.Hide();
             }
+            else
+            {
+               MessageBox.Show(error);
+            }
+            
 
         }
 
