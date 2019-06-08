@@ -31,11 +31,12 @@ namespace C969_Project
                 Console.WriteLine("Creating");
                 //TODO: Can we make create/update
                 //TODO: UTC time? Then convert back based on time?
+                //TODO: Create a DBhelper function that creates the unique ID for everything
 
                 //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
                 try
                 {
-                    DBHelper.createCustomer();
+                    DBHelper.createCustomer(1,nameTextbox.Text, 1, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp());
                 }
                 catch { }
 

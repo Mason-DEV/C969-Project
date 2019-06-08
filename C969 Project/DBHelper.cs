@@ -69,8 +69,34 @@ namespace C969_Project
             return DateTime.Now.ToString("u");
         }
 
-        public static void createCustomer() {
-           // customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
+        public static void createCustomer(int id, string name, int addressId, bool active, DateTime dateTime, int createId, string timestamp) {
+            //1,nameTextbox.Text, addressTextbox.Text, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp()
+            // customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+
+            SqlTransaction transaction;
+            // Start a local transaction.
+            transaction = conn.BeginTransaction();
+
+
+            var query = "INSERT into [dbo].[Customer] customerId, customerName, addressId,active, createDate, createdBy, lastUpdate, lastUpdateBy " +
+                "Values @customerId, @customerName, @addressId, @active, @createDate, @createdBy, @lastUpdate, @lastUpdateBy";
+            var cmd = new System.Data.SqlClient.SqlCommand();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.Parameters.AddWithValue("@customerId", id);
+            cmd.Parameters.AddWithValue("@customerName", name);
+            cmd.Parameters.AddWithValue("@addressId", addressId);
+            cmd.Parameters.AddWithValue("@active", active);
+            cmd.Parameters.AddWithValue("@createDate", dateTime);
+            cmd.Parameters.AddWithValue("@createdBy", createId);
+            cmd.Parameters.AddWithValue("@lastUpdate", timestamp);
+            cmd.Parameters.AddWithValue("@lastUpdateBy", createId);
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
         }
     }
 }
