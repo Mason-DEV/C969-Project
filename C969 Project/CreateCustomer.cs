@@ -26,12 +26,19 @@ namespace C969_Project
         private void createButton_Click(object sender, EventArgs e)
         {
             bool pass = validator();
-            if (pass) {
+            if (pass)
+            {
                 Console.WriteLine("Creating");
                 //TODO: Can we make create/update
                 //TODO: UTC time? Then convert back based on time?
-                
-                //Need to create customer record
+
+                //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
+                try
+                {
+                    DBHelper.createCustomer();
+                }
+                catch { }
+
                 //Need to create address record
                 //Need to create country record
                 //Need to create city record
@@ -40,7 +47,8 @@ namespace C969_Project
 
         }
 
-        private bool validator() {
+        private bool validator()
+        {
 
             if (System.Text.RegularExpressions.Regex.IsMatch(nameTextbox.Text, "[^a-zA-Z]+$"))
             {
@@ -68,7 +76,8 @@ namespace C969_Project
             return true;
         }
 
-        private bool emptyCheck() {
+        private bool emptyCheck()
+        {
             foreach (Control c in this.Controls)
             {
                 if (c is TextBox)
@@ -83,7 +92,8 @@ namespace C969_Project
             return true;
         }
 
-        private void showError(string item) {
+        private void showError(string item)
+        {
             Console.WriteLine("called");
             MessageBox.Show("Please enter a valid information for " + item);
 

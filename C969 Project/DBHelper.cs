@@ -68,5 +68,9 @@ namespace C969_Project
         {
             return DateTime.Now.ToString("u");
         }
+
+        public static void createCustomer() {
+           // customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
+        }
     }
 }
