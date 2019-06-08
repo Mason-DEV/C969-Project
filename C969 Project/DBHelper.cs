@@ -63,5 +63,10 @@ namespace C969_Project
             conn.Close();
             return 0;
         }
+
+        public static string getTimestamp()
+        {
+            return DateTime.Now.ToString("u");
+        }
     }
 }

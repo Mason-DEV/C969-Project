@@ -22,5 +22,71 @@ namespace C969_Project
             this.Owner.Show();
             this.Hide();
         }
+
+        private void createButton_Click(object sender, EventArgs e)
+        {
+            bool pass = validator();
+            if (pass) {
+                Console.WriteLine("Creating");
+                //TODO: Can we make create/update
+                //TODO: UTC time? Then convert back based on time?
+                
+                //Need to create customer record
+                //Need to create address record
+                //Need to create country record
+                //Need to create city record
+
+            }
+
+        }
+
+        private bool validator() {
+
+            if (System.Text.RegularExpressions.Regex.IsMatch(nameTextbox.Text, "[^a-zA-Z]+$"))
+            {
+                showError(nameLabel.Text);
+                return false;
+            }
+            if (System.Text.RegularExpressions.Regex.IsMatch(phoneTextbox.Text, "[^0-9-()]+$"))
+            {
+                showError(phoneLabel.Text);
+                return false;
+            }
+
+            if (System.Text.RegularExpressions.Regex.IsMatch(zipTextbox.Text, "[^0-9]"))
+            {
+                showError(zipLabel.Text);
+                return false;
+            }
+            /*
+            if (emptyCheck() == false)
+            {
+                MessageBox.Show("Please complete all Customer Information fields.");
+            }
+            */
+
+            return true;
+        }
+
+        private bool emptyCheck() {
+            foreach (Control c in this.Controls)
+            {
+                if (c is TextBox)
+                {
+                    TextBox textBox = c as TextBox;
+                    if (textBox.Text == string.Empty)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private void showError(string item) {
+            Console.WriteLine("called");
+            MessageBox.Show("Please enter a valid information for " + item);
+
+        }
     }
 }

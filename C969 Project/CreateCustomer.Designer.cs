@@ -56,13 +56,13 @@
             this.noRadio.Name = "noRadio";
             this.noRadio.Size = new System.Drawing.Size(39, 17);
             this.noRadio.TabIndex = 30;
-            this.noRadio.TabStop = true;
             this.noRadio.Text = "No";
             this.noRadio.UseVisualStyleBackColor = true;
             // 
             // yesRadio
             // 
             this.yesRadio.AutoSize = true;
+            this.yesRadio.Checked = true;
             this.yesRadio.Location = new System.Drawing.Point(110, 264);
             this.yesRadio.Name = "yesRadio";
             this.yesRadio.Size = new System.Drawing.Size(43, 17);
@@ -202,6 +202,7 @@
             this.createButton.TabIndex = 31;
             this.createButton.Text = "Create";
             this.createButton.UseVisualStyleBackColor = false;
+            this.createButton.Click += new System.EventHandler(this.createButton_Click);
             // 
             // createLabel
             // 
