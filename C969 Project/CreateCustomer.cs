@@ -25,6 +25,9 @@ namespace C969_Project
 
         private void createButton_Click(object sender, EventArgs e)
         {
+            DBHelper.getID("User", "userID");
+
+
             bool pass = validator();
             if (pass)
             {
@@ -33,16 +36,15 @@ namespace C969_Project
                 //TODO: UTC time? Then convert back based on time?
                 //TODO: Create a DBhelper function that creates the unique ID for everything
 
-                //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
-                try
-                {
-                    DBHelper.createCustomer(1,nameTextbox.Text, 1, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp());
-                }
-                catch { }
-
-                //Need to create address record
                 //Need to create country record
                 //Need to create city record
+                //Need to create address record
+                //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
+               // DBHelper.createCustomer(1,nameTextbox.Text, 1, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp());
+                
+                
+               
+                
 
             }
 

@@ -42,7 +42,7 @@ namespace C969_Project
         {
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
-            var query = "SELECT userId, userName FROM [dbo].[User] where userName = @userName AND password = @password";
+            var query = "SELECT userId, userName FROM [dbo].[Users] where userName = @userName AND password = @password";
             var cmd = new System.Data.SqlClient.SqlCommand();
             cmd.CommandText = query;
             cmd.Connection = conn;
@@ -69,7 +69,8 @@ namespace C969_Project
             return DateTime.Now.ToString("u");
         }
 
-        public static void createCustomer(int id, string name, int addressId, bool active, DateTime dateTime, int createId, string timestamp) {
+        public static void createCustomer(int id, string name, int addressId, bool active, DateTime dateTime, int createId, string timestamp)
+        {
             //1,nameTextbox.Text, addressTextbox.Text, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp()
             // customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
@@ -79,24 +80,48 @@ namespace C969_Project
             // Start a local transaction.
             transaction = conn.BeginTransaction();
 
-
             var query = "INSERT into [dbo].[Customer] customerId, customerName, addressId,active, createDate, createdBy, lastUpdate, lastUpdateBy " +
-                "Values @customerId, @customerName, @addressId, @active, @createDate, @createdBy, @lastUpdate, @lastUpdateBy";
+                        $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateTime}', '{createId}', '{timestamp}', '{createId}')";
             var cmd = new System.Data.SqlClient.SqlCommand();
             cmd.CommandText = query;
             cmd.Connection = conn;
             cmd.Transaction = transaction;
-            cmd.Parameters.AddWithValue("@customerId", id);
-            cmd.Parameters.AddWithValue("@customerName", name);
-            cmd.Parameters.AddWithValue("@addressId", addressId);
-            cmd.Parameters.AddWithValue("@active", active);
-            cmd.Parameters.AddWithValue("@createDate", dateTime);
-            cmd.Parameters.AddWithValue("@createdBy", createId);
-            cmd.Parameters.AddWithValue("@lastUpdate", timestamp);
-            cmd.Parameters.AddWithValue("@lastUpdateBy", createId);
+            //cmd.Parameters.AddWithValue("@customerId", id);
+            //cmd.Parameters.AddWithValue("@customerName", name);
+            //cmd.Parameters.AddWithValue("@addressId", addressId);
+            //cmd.Parameters.AddWithValue("@active", active);
+            //cmd.Parameters.AddWithValue("@createDate", dateTime);
+            //cmd.Parameters.AddWithValue("@createdBy", createId);
+            //cmd.Parameters.AddWithValue("@lastUpdate", timestamp);
+            //cmd.Parameters.AddWithValue("@lastUpdateBy", createId);
             cmd.ExecuteNonQuery();
             transaction.Commit();
             conn.Close();
+        }
+
+        //This grabs the max id from table and returns it
+        public static int getID(string table, string id) {
+
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+            //var query = "select userID from [User";
+            var query = $"SELECT '{id}' FROM '[]' ";
+            var cmd = new System.Data.SqlClient.SqlCommand();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            SqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                Console.WriteLine(rdr[0]);
+            }
+
+                return 0;
+        }
+
+        public static void createCountry()
+        {
+
         }
     }
 }
