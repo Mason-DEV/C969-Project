@@ -104,8 +104,7 @@ namespace C969_Project
 
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
-            //var query = "select userID from [User";
-            var query = $"SELECT '{id}' FROM '[]' ";
+            var query = $"SELECT max({id}) FROM {table}";
             var cmd = new System.Data.SqlClient.SqlCommand();
             cmd.CommandText = query;
             cmd.Connection = conn;

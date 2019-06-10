@@ -25,8 +25,8 @@ namespace C969_Project
 
         private void createButton_Click(object sender, EventArgs e)
         {
-            DBHelper.getID("User", "userID");
-
+            int countryID = DBHelper.getID("Country", "countryID");
+            Console.WriteLine(countryID+1);
 
             bool pass = validator();
             if (pass)
@@ -40,11 +40,7 @@ namespace C969_Project
                 //Need to create city record
                 //Need to create address record
                 //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
-               // DBHelper.createCustomer(1,nameTextbox.Text, 1, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp());
-                
-                
-               
-                
+                //DBHelper.createCustomer(1,nameTextbox.Text, 1, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp());
 
             }
 
