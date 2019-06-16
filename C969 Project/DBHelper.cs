@@ -78,7 +78,7 @@ namespace C969_Project
 
 
 
-        public static void createCustomer(int id, string name, int addressId, bool active, DateTime dateTime, int createId)
+        public static void createCustomer(int id, string name, int addressId, int active, DateTime dateTime, string user)
         {
             //1,nameTextbox.Text, addressTextbox.Text, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp()
             // customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
@@ -89,8 +89,8 @@ namespace C969_Project
             // Start a local transaction.
             transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[Customer] customerId, customerName, addressId,active, createDate, createdBy, lastUpdate, lastUpdateBy " +
-                        $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateTime}', '{createId}', '{timestamp}', '{createId}')";
+            var query = "INSERT into [dbo].[Customer] (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateTime}', '{user}', '{user}')";
             var cmd = new System.Data.SqlClient.SqlCommand();
             cmd.CommandText = query;
             cmd.Connection = conn;
@@ -117,16 +117,16 @@ namespace C969_Project
                 rdr.Read();
                 if (rdr[0] == DBNull.Value)
                 {
-                    conn.Close();
+                    
                     return 0;
                 }
              
-                conn.Close();
+
                 return Convert.ToInt32(rdr[0]); ;
                 
               
             }
-            conn.Close();
+            
             return 0;
         }
 
@@ -198,7 +198,7 @@ namespace C969_Project
             //addressId INT(10) address VARCHAR(50) address2 VARCHAR(50) cityId INT(10) postalCode VARCHAR(10) phone VARCHAR(20)
             //createDate DATETIME createdBy VARCHAR(40) lastUpdate TIMESTAMP lastUpdateBy VARCHAR(40)
 
-            int addressID = getID("Address", "addressId");
+            int addressID = getID("Address", "addressId")+1;
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
             //SQL 

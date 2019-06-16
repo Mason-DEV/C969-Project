@@ -32,16 +32,15 @@ namespace C969_Project
             {
                 Console.WriteLine("Creating");
                 //TODO: Can we make create/update
-                //TODO: UTC time? Then convert back based on time?
                 
                 //Need to create country record
                 int countryID = DBHelper.createCountry(countryTextbox.Text);
                 //Need to create city record
                 int cityID = DBHelper.createCity(countryID, cityTextbox.Text);
                 //Need to create address record
-                int addressID = DBHelper.createAddress(cityID, addressTextbox.Text, zipTextbox.Text, phoneTextbox.Text); 
+                int addressID = DBHelper.createAddress(cityID, addressTextbox.Text, zipTextbox.Text, phoneTextbox.Text);
                 //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
-                DBHelper.createCustomer(DBHelper.getID("Customer","customerId"),nameTextbox.Text, addressID, yesRadio.Checked ? 1 : 0, DateTime.Now.ToUniversalTime, DBHelper.getCurrentUserName()));
+                DBHelper.createCustomer(DBHelper.getID("Customer", "customerId")+1, nameTextbox.Text, addressID, yesRadio.Checked ? 1 : 0, DBHelper.getDateTime(), DBHelper.getCurrentUserName());
 
             }
 
