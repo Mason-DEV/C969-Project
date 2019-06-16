@@ -25,8 +25,7 @@ namespace C969_Project
 
         private void createButton_Click(object sender, EventArgs e)
         {
-            int countryID = DBHelper.getID("Country", "countryID");
-            Console.WriteLine(countryID+1);
+            //int countryID = DBHelper.getID("Country", "countryID");
 
             bool pass = validator();
             if (pass)
@@ -34,13 +33,15 @@ namespace C969_Project
                 Console.WriteLine("Creating");
                 //TODO: Can we make create/update
                 //TODO: UTC time? Then convert back based on time?
-                //TODO: Create a DBhelper function that creates the unique ID for everything
-
+                
                 //Need to create country record
+                int countryID = DBHelper.createCountry(countryTextbox.Text);
                 //Need to create city record
+                int cityID = DBHelper.createCity(countryID, cityTextbox.Text);
                 //Need to create address record
+                int addressID = DBHelper.createAddress(cityID, addressTextbox.Text, zipTextbox.Text, phoneTextbox.Text); 
                 //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
-                //DBHelper.createCustomer(1,nameTextbox.Text, 1, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp());
+                DBHelper.createCustomer(DBHelper.getID("Customer","customerId"),nameTextbox.Text, addressID, yesRadio.Checked ? 1 : 0, DateTime.Now.ToUniversalTime, DBHelper.getCurrentUserName()));
 
             }
 
