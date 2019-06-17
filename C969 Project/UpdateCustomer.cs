@@ -19,20 +19,22 @@ namespace C969_Project
             InitializeComponent();
         }
 
-        public void setCustList(List<KeyValuePair<string, object>> list) {
+        public void setCustList(List<KeyValuePair<string, object>> list)
+        {
 
             CustList = list;
 
         }
 
-        public static List<KeyValuePair<string, object>> getCustList() {
+        public static List<KeyValuePair<string, object>> getCustList()
+        {
 
             return CustList;
         }
 
 
 
-            private void cancelButton_Click(object sender, EventArgs e)
+        private void cancelButton_Click(object sender, EventArgs e)
         {
             this.Owner.Show();
             this.Hide();
@@ -119,11 +121,14 @@ namespace C969_Project
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
-
+            var list = getCustList();
+            IDictionary<string, object> dictionary = list.ToDictionary(pair => pair.Key, pair => pair.Value);
             //grab all IDs
             //grab things that wont change
-            var list = getCustList();
-            Console.WriteLine(list.First(kvp => kvp.Key == "customerId").Value.ToString());
+            Console.WriteLine(dictionary["customerName"]); // will print 2
+            dictionary["customerName"] = nameTextbox.Text;
+            Console.WriteLine(dictionary["customerName"]); // will print 2
+
         }
     }
 }
