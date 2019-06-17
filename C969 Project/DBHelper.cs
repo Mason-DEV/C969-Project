@@ -15,12 +15,9 @@ namespace C969_Project
     {
         private static int userID;
         private static string userName;
-        public static string neat = Application.StartupPath;
-        
-       //public static string dataString = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename=" + Application.StartupPath + @"\Database.mdf; Integrated Security=True;";
         public static string dataString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\Database.mdf';Integrated Security=True";
-       
-        
+
+
 
 
         public static int getCurrentUserId()
@@ -45,7 +42,6 @@ namespace C969_Project
 
         public static int userCheck(string user, string pass)
         {
-            Console.WriteLine(neat);
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
             var query = "SELECT userId, userName FROM [dbo].[Users] where userName = @userName AND password = @password";
@@ -59,7 +55,6 @@ namespace C969_Project
             if (rdr.HasRows)
             {
                 rdr.Read();
-                //Set currentID and currentUsername
                 setCurrentUserId(Convert.ToInt32(rdr[0]));
                 setCurrentUserName(Convert.ToString(rdr[1]));
                 rdr.Close();
@@ -73,20 +68,17 @@ namespace C969_Project
         public static DateTime getDateTime()
         {
             return DateTime.Now.ToUniversalTime();
-          
+
         }
 
 
-
+        //Creates customer record
         public static void createCustomer(int id, string name, int addressId, int active, DateTime dateTime, string user)
         {
-            //1,nameTextbox.Text, addressTextbox.Text, yesRadio.Checked, DateTime.Now, DBHelper.getCurrentUserId(), DBHelper.getTimestamp()
-            // customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
 
             SqlTransaction transaction;
-            // Start a local transaction.
             transaction = conn.BeginTransaction();
 
             var query = "INSERT into [dbo].[Customer] (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
@@ -101,7 +93,8 @@ namespace C969_Project
         }
 
         //This grabs the max id from table and returns it
-        public static int getID(string table, string id) {
+        public static int getID(string table, string id)
+        {
 
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
@@ -109,42 +102,36 @@ namespace C969_Project
             var cmd = new System.Data.SqlClient.SqlCommand();
             cmd.CommandText = query;
             cmd.Connection = conn;
-            
+
             SqlDataReader rdr = cmd.ExecuteReader();
-           
+
             if (rdr.HasRows)
             {
                 rdr.Read();
                 if (rdr[0] == DBNull.Value)
                 {
-                    
+
                     return 0;
                 }
-             
+
 
                 return Convert.ToInt32(rdr[0]); ;
-                
-              
+
+
             }
-            
+
             return 0;
         }
 
+        //Creates Country record
         public static int createCountry(string country)
         {
-            //Int(10) countryID, varchar(50) country, Datetime createDate, varchar(40) createdBy, timestamp lastUpdate, varchar(40) lastUpdateBy;
 
-            //Grab maxint of other crounties for countryID
             int countryID = getID("Country", "countryID") + 1;
-            //Pass in country text from form
-            //Grab datetime
-            //grab usernane for createdby
             string user = getCurrentUserName();
-            //grab timestamp for lastUpdate
             DateTime utc = getDateTime();
-            //grab username for lastUpdatedBy
 
-            //SQL 
+
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
 
@@ -165,14 +152,13 @@ namespace C969_Project
             return countryID;
         }
 
+        //Creates city record
         public static int createCity(int countryID, string city)
         {
-            //Int(10) cityID, varchar(50) city, int(10) countryID, Datetime createDate, varchar(40) createdBy, timestamp lastUpdate, varchar(40) lastUpdateBy;
             int cityID = getID("City", "cityId") + 1;
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
- 
-            //SQL 
+
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
 
@@ -194,14 +180,14 @@ namespace C969_Project
 
         }
 
-        public static int createAddress(int cityID, string address, string postalCode, string phone) {
-            //addressId INT(10) address VARCHAR(50) address2 VARCHAR(50) cityId INT(10) postalCode VARCHAR(10) phone VARCHAR(20)
-            //createDate DATETIME createdBy VARCHAR(40) lastUpdate TIMESTAMP lastUpdateBy VARCHAR(40)
+        //Creates address record
+        public static int createAddress(int cityID, string address, string postalCode, string phone)
+        {
 
-            int addressID = getID("Address", "addressId")+1;
+            int addressID = getID("Address", "addressId") + 1;
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
-            //SQL 
+
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
             conn.Open();
 
@@ -221,5 +207,89 @@ namespace C969_Project
 
             return addressID;
         }
+
+        public static List<KeyValuePair<string, object>> searchCustomer(int customerID)
+        {
+            var list = new List<KeyValuePair<string, object>>();
+            //Get customer Table info
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+            var cmd = new System.Data.SqlClient.SqlCommand();
+
+            var query = $"SELECT * FROM Customer WHERE customerId = {customerID}";
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            SqlDataReader rdr = cmd.ExecuteReader();
+            try
+            {
+                if (rdr.HasRows)
+                {
+                    rdr.Read();
+                    list.Add(new KeyValuePair<string, object>("customerId", rdr[0]));
+                    list.Add(new KeyValuePair<string, object>("customerName", rdr[1]));
+                    list.Add(new KeyValuePair<string, object>("addressId", rdr[2]));
+                    list.Add(new KeyValuePair<string, object>("active", rdr[3]));
+                    rdr.Close();
+                }
+                else
+                {
+                    MessageBox.Show("No Customer found with the ID: " + customerID, "Please try again");
+                    return null;
+                }
+
+                //Get Address info now that we have addressID
+                var addressID = list.First(kvp => kvp.Key == "addressId").Value;
+                
+                var query2 = $"SELECT * FROM Address WHERE addressId = {addressID}";
+                cmd.CommandText = query2;
+                cmd.Connection = conn;
+                SqlDataReader rdr2 = cmd.ExecuteReader();
+                if (rdr2.HasRows)
+                {
+                    rdr2.Read();
+                    list.Add(new KeyValuePair<string, object>("address", rdr2[1]));
+                    list.Add(new KeyValuePair<string, object>("cityId", rdr2[3]));
+                    list.Add(new KeyValuePair<string, object>("postalCode", rdr2[4]));
+                    list.Add(new KeyValuePair<string, object>("phone", rdr2[5]));
+                    rdr2.Close();
+                }
+
+                //Get city info now that we have cityID
+                var cityID = list.First(kvp => kvp.Key == "cityId").Value;
+
+                var query3 = $"SELECT * FROM City WHERE cityId = {cityID}";
+                cmd.CommandText = query3;
+                cmd.Connection = conn;
+                SqlDataReader rdr3 = cmd.ExecuteReader();
+                if (rdr3.HasRows)
+                {
+                    rdr3.Read();
+                    list.Add(new KeyValuePair<string, object>("city", rdr3[1]));
+                    list.Add(new KeyValuePair<string, object>("countryId", rdr3[2]));
+                    rdr3.Close();
+                }
+
+                //Get country info now that we have countryId
+                var countryID = list.First(kvp => kvp.Key == "countryId").Value;
+
+                var query4 = $"SELECT * FROM Country WHERE countryId = {countryID}";
+                cmd.CommandText = query4;
+                cmd.Connection = conn;
+                SqlDataReader rdr4 = cmd.ExecuteReader();
+                if (rdr4.HasRows)
+                {
+                    rdr4.Read();
+                    list.Add(new KeyValuePair<string, object>("country", rdr4[1]));
+                    rdr4.Close();
+                }
+
+                return list;
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex);
+                return null; }
+            }
+
+        }
     }
-}
+

@@ -20,18 +20,16 @@ namespace C969_Project
         private void cancelButton_Click(object sender, EventArgs e)
         {
             this.Owner.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void createButton_Click(object sender, EventArgs e)
         {
-            //int countryID = DBHelper.getID("Country", "countryID");
 
             bool pass = validator();
             if (pass)
             {
                 Console.WriteLine("Creating");
-                //TODO: Can we make create/update
                 
                 //Need to create country record
                 int countryID = DBHelper.createCountry(countryTextbox.Text);
@@ -42,6 +40,8 @@ namespace C969_Project
                 //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
                 DBHelper.createCustomer(DBHelper.getID("Customer", "customerId")+1, nameTextbox.Text, addressID, yesRadio.Checked ? 1 : 0, DBHelper.getDateTime(), DBHelper.getCurrentUserName());
 
+                this.Owner.Show();
+                this.Close();
             }
 
         }
