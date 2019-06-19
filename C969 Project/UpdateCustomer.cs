@@ -103,6 +103,7 @@ namespace C969_Project
 
         private void fillFields(List<KeyValuePair<string, object>> custList)
         {
+            //Lambda
             nameTextbox.Text = custList.First(kvp => kvp.Key == "customerName").Value.ToString();
             phoneTextbox.Text = custList.First(kvp => kvp.Key == "phone").Value.ToString();
             addressTextbox.Text = custList.First(kvp => kvp.Key == "address").Value.ToString();
@@ -115,19 +116,28 @@ namespace C969_Project
             }
             else
             {
-                noRadio.Checked = false;
+                noRadio.Checked = true;
             }
         }
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
+            //Grab list, lets change to IDictionary so we can replace easier
+
+            //Grab List & convert
             var list = getCustList();
             IDictionary<string, object> dictionary = list.ToDictionary(pair => pair.Key, pair => pair.Value);
-            //grab all IDs
-            //grab things that wont change
-            Console.WriteLine(dictionary["customerName"]); // will print 2
+            //replace values for the keys in the form         
             dictionary["customerName"] = nameTextbox.Text;
-            Console.WriteLine(dictionary["customerName"]); // will print 2
+            dictionary["phone"] = phoneTextbox.Text;
+            dictionary["address"] = addressTextbox.Text;
+            dictionary["city"] = cityTextbox.Text;
+            dictionary["postalCode"] = zipTextbox.Text;
+            dictionary["country"] = countryTextbox.Text;
+            dictionary["active"] = yesRadio.Checked ? 1 : 0;
+
+            //Pass the updated IDictionary to dbhelper to update the database
+            DBHelper.updateCustomer(dictionary);
 
         }
     }

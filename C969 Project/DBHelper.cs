@@ -208,6 +208,7 @@ namespace C969_Project
             return addressID;
         }
 
+        //Lookup customer info and return it as a list
         public static List<KeyValuePair<string, object>> searchCustomer(int customerID)
         {
             var list = new List<KeyValuePair<string, object>>();
@@ -239,7 +240,7 @@ namespace C969_Project
 
                 //Get Address info now that we have addressID
                 var addressID = list.First(kvp => kvp.Key == "addressId").Value;
-                
+
                 var query2 = $"SELECT * FROM Address WHERE addressId = {addressID}";
                 cmd.CommandText = query2;
                 cmd.Connection = conn;
@@ -285,11 +286,138 @@ namespace C969_Project
 
                 return list;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
-                return null; }
+                return null;
             }
+        }
+
+        //Updates the database of all values assoicated with updating customer record
+        /*
+            Key = customerId, Value = 2
+            Key = customerName, Value = Mason
+            Key = addressId, Value = 3
+            Key = active, Value = 1
+            Key = address, Value = Ivory Dr
+            Key = cityId, Value = 6
+            Key = postalCode, Value = 33573
+            Key = phone, Value = 7275973188
+            Key = city, Value = Ruskin
+            Key = countryId, Value = 14
+            Key = country, Value = USA
+        */
+
+        public static void updateCustomer(IDictionary<string, object> dictionary)
+        {
+            string user = getCurrentUserName();
+            DateTime utc = getDateTime();
+
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+            SqlTransaction transaction;
+
+            // Start a country transaction.
+            transaction = conn.BeginTransaction();
+            var query = $"UPDATE country" +
+                $" SET country = '{dictionary["country"]}', lastUpdateBy = '{user}'" +
+                $" WHERE countryId = '{dictionary["countryId"]}'";
+            var cmd = new System.Data.SqlClient.SqlCommand();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+
+            // Start a city transaction.
+            transaction = conn.BeginTransaction();
+            var query2 = $"UPDATE City" +
+                $" SET city = '{dictionary["city"]}', lastUpdateBy = '{user}'" +
+                $" WHERE cityId = '{dictionary["cityId"]}'";
+            cmd.CommandText = query2;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+
+            // Start a address transaction.
+            transaction = conn.BeginTransaction();
+            var query3 = $"UPDATE Address" +
+                $" SET address = '{dictionary["address"]}', lastUpdateBy = '{user}', postalCode = '{dictionary["postalCode"]}', phone = '{dictionary["phone"]}'" +
+                $" WHERE addressId = '{dictionary["addressId"]}'";
+            cmd.CommandText = query3;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+
+            // Start a customer transaction.
+            transaction = conn.BeginTransaction();
+            var query4 = $"UPDATE Customer" +
+                $" SET customerName = '{dictionary["customerName"]}', lastUpdateBy = '{user}', active = '{dictionary["active"]}'" +
+                $" WHERE customerId = '{dictionary["customerId"]}'";
+            cmd.CommandText = query4;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
+        }
+
+        public static void deleteCustomer(IDictionary<string, object> dictionary)
+        {
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+            var cmd = new System.Data.SqlClient.SqlCommand();
+            SqlTransaction transaction;
+
+            // Start a customer transaction.
+            transaction = conn.BeginTransaction();
+            var query4 = $"DELETE FROM Customer" +
+                $" WHERE customerId = '{dictionary["customerId"]}'";
+            cmd.CommandText = query4;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            
+
+            // Start a address transaction.
+            transaction = conn.BeginTransaction();
+            var query3 = $"DELETE FROM Address" +
+                $" WHERE addressId = '{dictionary["addressId"]}'";
+            cmd.CommandText = query3;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+
+            // Start a city transaction.
+            transaction = conn.BeginTransaction();
+            var query2 = $"DELETE FROM City" +
+                $" WHERE cityId = '{dictionary["cityId"]}'";
+            cmd.CommandText = query2;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+
+            // Start a country transaction.
+            transaction = conn.BeginTransaction();
+            var query = $"DELETE FROM Country" +
+                $" WHERE countryId = '{dictionary["countryId"]}'";
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
+
 
         }
+
     }
+
+
+}
 

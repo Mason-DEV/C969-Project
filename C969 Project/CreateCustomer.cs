@@ -29,8 +29,6 @@ namespace C969_Project
             bool pass = validator();
             if (pass)
             {
-                Console.WriteLine("Creating");
-                
                 //Need to create country record
                 int countryID = DBHelper.createCountry(countryTextbox.Text);
                 //Need to create city record
