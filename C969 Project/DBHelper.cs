@@ -16,7 +16,7 @@ namespace C969_Project
         private static int userID;
         private static string userName;
         public static string dataString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\Database.mdf';Integrated Security=True";
-
+        //public static string dataString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + Application.StartupPath + "\\Database.mdf;Integrated Security=True";
 
 
 
@@ -416,6 +416,31 @@ namespace C969_Project
 
         }
 
+
+        public static void createAppointment(int custID, string title, string description, string location, string contact, string type, DateTime start, DateTime endTime)
+        {
+            //Need to create Appointment record  -- int appointmentID, int customerID, int userId, varchar255 title, text description, text location,
+            //text contact, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
+
+            int appointID = getID("Appointment", "appointmentId") + 1;
+            int userID = 1;
+            DateTime utc = getDateTime();
+
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+            SqlTransaction transaction;
+            // Start a local transaction.
+            transaction = conn.BeginTransaction();
+            var query = "INSERT into [dbo].[Appointment] (appointmentId, customerId, userI, title, description, location, contact, type, url, startTime, endTime, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{appointID}', '{custID}', '{userID}','{title}', '{description}', '{location}', '{contact}', '{type}','{custID}', '{start}','{endTime}','{utc}','{userID}','{userID}')";
+            var cmd = new System.Data.SqlClient.SqlCommand();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
+        }
     }
 
 

@@ -61,5 +61,13 @@ namespace C969_Project
         {
             Logger.signOut(DBHelper.getCurrentUserName());
         }
+
+        private void AddApptButton_Click(object sender, EventArgs e)
+        {
+            Form addPoint = new AddAppoint();
+            addPoint.Owner = this;
+            addPoint.Show();
+            this.Hide();
+        }
     }
 }

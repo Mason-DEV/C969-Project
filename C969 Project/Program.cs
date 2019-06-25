@@ -14,10 +14,12 @@ namespace C969_Project
         [STAThread]
         static void Main()
         {
+        
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Login());
-            Application.Run(new DeleteCustomer());
+           // Application.Run(new Login());
+            Application.Run(new AddAppoint());
         }
     }
 }

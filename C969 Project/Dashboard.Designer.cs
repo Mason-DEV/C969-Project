@@ -147,6 +147,7 @@ namespace C969_Project
             this.addApptButton.TabIndex = 3;
             this.addApptButton.Text = "Add";
             this.addApptButton.UseVisualStyleBackColor = false;
+            this.addApptButton.Click += new System.EventHandler(this.AddApptButton_Click);
             // 
             // dataGridView1
             // 
