@@ -40,6 +40,47 @@ namespace C969_Project
             userName = currentUserName;
         }
 
+        public static DataTable dashboard(DateTime filter, bool week) {
+
+            string query;
+            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            conn.Open();
+
+            if (week == true)
+            {
+               // DateTime filter = calcDateFilter("week");
+                query = $"SELECT url as 'Customer Record',  startTime as 'Start Time', endTime as 'End Time', type as 'Type', location as 'Location', title as 'Title' FROM Appointment where endTime < '{filter}' and startTime > '{getDateTime()}' order by startTime";
+            }
+            else
+            {
+               // DateTime filter = calcDateFilter("month");
+                query = $"SELECT  url as 'Customer Record', startTime as 'Start Time', endTime as 'End Time', type as 'Type', location as 'Location', title as 'Title' FROM Appointment where endTime < '{filter}' and startTime > '{getDateTime()}'  order by startTime";
+            }
+
+            var cmd = new System.Data.SqlClient.SqlCommand();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+
+            SqlDataAdapter sqlDataAdap = new SqlDataAdapter(cmd);
+
+            DataTable dtRecord = new DataTable();
+            sqlDataAdap.Fill(dtRecord);
+            sqlDataAdap.Update(dtRecord);
+            conn.Close();
+
+            //Converts the time to localtime from utc in DB
+            foreach (DataRow row in dtRecord.Rows)
+            {
+                DateTime utcStart = Convert.ToDateTime(row["Start Time"]);
+                DateTime utcEnd = Convert.ToDateTime(row["End Time"]);
+                row["Start Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcStart);
+                row["End Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcEnd);
+            }
+
+            return dtRecord;
+
+        }
+
         public static int userCheck(string user, string pass)
         {
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
@@ -423,7 +464,9 @@ namespace C969_Project
             //text contact, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
 
             int appointID = getID("Appointment", "appointmentId") + 1;
+            Console.WriteLine(appointID);
             int userID = 1;
+            
             DateTime utc = getDateTime();
 
             SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
@@ -431,7 +474,7 @@ namespace C969_Project
             SqlTransaction transaction;
             // Start a local transaction.
             transaction = conn.BeginTransaction();
-            var query = "INSERT into [dbo].[Appointment] (appointmentId, customerId, userI, title, description, location, contact, type, url, startTime, endTime, createDate, createdBy, lastUpdateBy) " +
+            var query = "INSERT into [dbo].[Appointment] (appointmentId, customerId, userId, title, description, location, contact, type, url, startTime, endTime, createDate, createdBy, lastUpdateBy) " +
                         $"VALUES ('{appointID}', '{custID}', '{userID}','{title}', '{description}', '{location}', '{contact}', '{type}','{custID}', '{start}','{endTime}','{utc}','{userID}','{userID}')";
             var cmd = new System.Data.SqlClient.SqlCommand();
             cmd.CommandText = query;
@@ -440,6 +483,7 @@ namespace C969_Project
             cmd.ExecuteNonQuery();
             transaction.Commit();
             conn.Close();
+            
         }
     }
 

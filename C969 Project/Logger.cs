@@ -8,12 +8,8 @@ using System.Windows.Forms;
 
 namespace C969_Project
 {
-
-
     class Logger
     {
-
-
         public static void signIn(string userName)
         {
 
@@ -22,7 +18,6 @@ namespace C969_Project
 
             foreach (KeyValuePair<DateTime, string> keyValue in dictionary)
             {
-
                 string log = string.Format("Login time = {0}, userName = {1}", keyValue.Key, keyValue.Value);
                 Console.WriteLine(log);
                 StringBuilder sb = new StringBuilder();
@@ -30,7 +25,6 @@ namespace C969_Project
 
                 File.AppendAllText(Application.StartupPath + "_logins-logouts.txt", sb.ToString());
                 sb.Clear();
-
             }
         }
 
@@ -54,6 +48,7 @@ namespace C969_Project
             }
         }
 
+      
     }
 
 }

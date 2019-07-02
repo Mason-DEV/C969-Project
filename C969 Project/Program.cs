@@ -18,8 +18,8 @@ namespace C969_Project
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-           // Application.Run(new Login());
-            Application.Run(new AddAppoint());
+            //Application.Run(new Login());
+            Application.Run(new Dashboard());
         }
     }
 }

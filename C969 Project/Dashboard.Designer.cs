@@ -30,15 +30,16 @@ namespace C969_Project
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.dashLabel = new System.Windows.Forms.Label();
             this.apptGroupbox = new System.Windows.Forms.GroupBox();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.monthViewRadio = new System.Windows.Forms.RadioButton();
             this.weekViewRadio = new System.Windows.Forms.RadioButton();
             this.deleteApptButton = new System.Windows.Forms.Button();
             this.updateApptButton = new System.Windows.Forms.Button();
             this.addApptButton = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.custGroupbox = new System.Windows.Forms.GroupBox();
             this.deleteCusButton = new System.Windows.Forms.Button();
             this.updateCusButton = new System.Windows.Forms.Button();
@@ -48,7 +49,7 @@ namespace C969_Project
             this.schedButton = new System.Windows.Forms.Button();
             this.numApptButton = new System.Windows.Forms.Button();
             this.apptGroupbox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.custGroupbox.SuspendLayout();
             this.reportsGroupbox.SuspendLayout();
             this.SuspendLayout();
@@ -66,12 +67,12 @@ namespace C969_Project
             // 
             // apptGroupbox
             // 
+            this.apptGroupbox.Controls.Add(this.dataGridView);
             this.apptGroupbox.Controls.Add(this.monthViewRadio);
             this.apptGroupbox.Controls.Add(this.weekViewRadio);
             this.apptGroupbox.Controls.Add(this.deleteApptButton);
             this.apptGroupbox.Controls.Add(this.updateApptButton);
             this.apptGroupbox.Controls.Add(this.addApptButton);
-            this.apptGroupbox.Controls.Add(this.dataGridView1);
             this.apptGroupbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.apptGroupbox.ForeColor = System.Drawing.Color.RoyalBlue;
             this.apptGroupbox.Location = new System.Drawing.Point(12, 183);
@@ -80,6 +81,31 @@ namespace C969_Project
             this.apptGroupbox.TabIndex = 1;
             this.apptGroupbox.TabStop = false;
             this.apptGroupbox.Text = "Appointments";
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeColumns = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.RoyalBlue;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.Location = new System.Drawing.Point(328, 63);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersVisible = false;
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.Size = new System.Drawing.Size(546, 249);
+            this.dataGridView.TabIndex = 9;
             // 
             // monthViewRadio
             // 
@@ -94,6 +120,7 @@ namespace C969_Project
             this.monthViewRadio.TabStop = true;
             this.monthViewRadio.Text = "Month View";
             this.monthViewRadio.UseVisualStyleBackColor = true;
+            this.monthViewRadio.CheckedChanged += new System.EventHandler(this.MonthViewRadio_CheckedChanged);
             // 
             // weekViewRadio
             // 
@@ -108,6 +135,7 @@ namespace C969_Project
             this.weekViewRadio.TabIndex = 7;
             this.weekViewRadio.Text = "Week View";
             this.weekViewRadio.UseVisualStyleBackColor = true;
+            this.weekViewRadio.CheckedChanged += new System.EventHandler(this.WeekViewRadio_CheckedChanged);
             // 
             // deleteApptButton
             // 
@@ -148,14 +176,6 @@ namespace C969_Project
             this.addApptButton.Text = "Add";
             this.addApptButton.UseVisualStyleBackColor = false;
             this.addApptButton.Click += new System.EventHandler(this.AddApptButton_Click);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(315, 58);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(607, 255);
-            this.dataGridView1.TabIndex = 0;
             // 
             // custGroupbox
             // 
@@ -283,7 +303,7 @@ namespace C969_Project
             this.Text = "Dashboard";
             this.apptGroupbox.ResumeLayout(false);
             this.apptGroupbox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.custGroupbox.ResumeLayout(false);
             this.reportsGroupbox.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -309,6 +329,6 @@ namespace C969_Project
         private System.Windows.Forms.Button deleteApptButton;
         private System.Windows.Forms.Button updateApptButton;
         private System.Windows.Forms.Button addApptButton;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView;
     }
 }

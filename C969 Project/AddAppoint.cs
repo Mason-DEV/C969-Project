@@ -78,6 +78,8 @@ namespace C969_Project
                         Console.WriteLine("Do the thing");
                         //Validations passed -- Need to create Appointment record  -- int appointmentID, int customerID, int userId, varchar255 title, text description, text location, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
                         DBHelper.createAppointment(custID, titleTextbox.Text, descriptionTextbox.Text, locationTextbox.Text, contactTextbox.Text, typeTextbox.Text, start, end);
+                        this.Owner.Show();
+                        this.Close();
                         break;
                 }
             }
@@ -87,33 +89,6 @@ namespace C969_Project
             }
 
         }
-
-
-            /*
-            if (validated == 1)
-            {
-                MessageBox.Show("This appointment does not fall within business hours.");
-            }
-            else if (validated == 2)
-            {
-                //failed overlapp
-            }
-            else if (validated == 3)
-            {
-                MessageBox.Show("The appointments starts after the end time.");
-
-            }
-            else if (validated == 4)
-            {
-                MessageBox.Show("This appointment start and end date are not on the same date.");
-            }
-            else
-            {
-                //Validations passed -- Need to create Appointment record  -- int appointmentID, int customerID, int userId, varchar255 title, text description, text location, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
-                DBHelper.createAppointment(custID, titleTextbox.Text, descriptionTextbox.Text, locationTextbox.Text, contactTextbox.Text, typeTextbox.Text, start, end);
-            }
-        }
-            */
 
         public int appointmentValid(DateTime start, DateTime end)
         {
