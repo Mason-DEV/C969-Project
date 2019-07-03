@@ -120,7 +120,6 @@ namespace C969_Project
             this.monthViewRadio.TabStop = true;
             this.monthViewRadio.Text = "Month View";
             this.monthViewRadio.UseVisualStyleBackColor = true;
-            this.monthViewRadio.CheckedChanged += new System.EventHandler(this.MonthViewRadio_CheckedChanged);
             // 
             // weekViewRadio
             // 

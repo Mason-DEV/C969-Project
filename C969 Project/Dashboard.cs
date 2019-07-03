@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace C969_Project
     public partial class Dashboard : Form
     {
 
-        public string dataString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\Database.mdf';Integrated Security=True";
+        public static string dataString = DBHelper.getDataString();
         public Dashboard()
         {
             InitializeComponent();
@@ -88,10 +89,6 @@ namespace C969_Project
             Dashboard_Load(weekViewRadio.Checked);
         }
 
-        private void MonthViewRadio_CheckedChanged(object sender, EventArgs e)
-        {
-            Dashboard_Load(weekViewRadio.Checked);
-        }
 
         public DateTime calcDateFilter(string type)
         {

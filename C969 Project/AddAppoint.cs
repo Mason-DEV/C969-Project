@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,8 +12,10 @@ using System.Windows.Forms;
 
 namespace C969_Project
 {
+
     public partial class AddAppoint : Form
     {
+        public string dataString = DBHelper.getDataString();
         public AddAppoint()
         {
             InitializeComponent();
@@ -23,11 +26,13 @@ namespace C969_Project
 
         public void fillCust()
         {
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\Database.mdf';Integrated Security=True");
+            MySqlConnection conn = new MySqlConnection(dataString);
+
             try
             {
-                string query = "select customerId, (customerName + ' -- ID: ' +  CONVERT(varchar(10), customerId)) as Display from Customer;";
-                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                //string query = "select customerId, (customerName + ' -- ID: ' +  CONVERT(varchar(10), customerId)) as Display from customer;";
+                string query = "select customerId as Display from customer";
+                MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                 conn.Open();
                 DataSet ds = new DataSet();
                 da.Fill(ds, "Cust");
@@ -49,7 +54,7 @@ namespace C969_Project
                 //Have a customer selected so lets add the appointment
                 //customerID
                 DataRowView drv = custComboBox.SelectedItem as DataRowView;
-                int custID = Convert.ToInt32(custComboBox.SelectedValue.ToString());
+                int custID = 1;// Convert.ToInt32(custComboBox.SelectedValue);
                 //grab data fields from form
 
                 DateTime start = startDTP.Value.ToUniversalTime();

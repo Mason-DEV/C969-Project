@@ -15,11 +15,12 @@ namespace C969_Project
     {
         private static int userID;
         private static string userName;
-        public static string dataString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\Database.mdf';Integrated Security=True";
-        //public static string dataString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + Application.StartupPath + "\\Database.mdf;Integrated Security=True";
+        public static string dataString = "server=52.206.157.109;database=U05lxQ;uid=U05lxQ;pwd=53688540778; convert zero datetime=True";
 
 
-
+        public static string getDataString() {
+            return dataString;
+        }
         public static int getCurrentUserId()
         {
             return userID;
@@ -42,26 +43,33 @@ namespace C969_Project
 
         public static DataTable dashboard(DateTime filter, bool week) {
 
-            string query;
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            Console.WriteLine("doing things");
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
 
-            if (week == true)
+            string query = week? $"SELECT customerId as 'Customer ID',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment"// where end < '{filter}' and start > '{getDateTime()}' order by start;"
+                : $"SELECT  customerId as 'Customer ID', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where end < '{filter}' and start > '{getDateTime()}'  order by start;";
+            Console.WriteLine(query);
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            DataTable dt = new DataTable();
+            dt.Load(cmd.ExecuteReader());
+            Console.WriteLine(dt.Rows.Count);
+            //Converts the time to localtime from utc in DB
+            foreach (DataRow row in dt.Rows)
             {
-               // DateTime filter = calcDateFilter("week");
-                query = $"SELECT url as 'Customer Record',  startTime as 'Start Time', endTime as 'End Time', type as 'Type', location as 'Location', title as 'Title' FROM Appointment where endTime < '{filter}' and startTime > '{getDateTime()}' order by startTime";
-            }
-            else
-            {
-               // DateTime filter = calcDateFilter("month");
-                query = $"SELECT  url as 'Customer Record', startTime as 'Start Time', endTime as 'End Time', type as 'Type', location as 'Location', title as 'Title' FROM Appointment where endTime < '{filter}' and startTime > '{getDateTime()}'  order by startTime";
+                Console.WriteLine(row);
+                DateTime utcStart = Convert.ToDateTime(row["Start Time"]);
+                DateTime utcEnd = Convert.ToDateTime(row["End Time"]);
+                row["Start Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcStart);
+                row["End Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcEnd);
             }
 
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+            conn.Close();
+            return dt;
+            /*
 
-            SqlDataAdapter sqlDataAdap = new SqlDataAdapter(cmd);
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataAdapter sqlDataAdap = new MySqlDataAdapter(query, conn);
 
             DataTable dtRecord = new DataTable();
             sqlDataAdap.Fill(dtRecord);
@@ -77,22 +85,18 @@ namespace C969_Project
                 row["End Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcEnd);
             }
 
+            Console.WriteLine(dtRecord);
             return dtRecord;
-
+            */
         }
 
         public static int userCheck(string user, string pass)
         {
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
-            conn.Open();
-            var query = "SELECT userId, userName FROM [dbo].[Users] where userName = @userName AND password = @password";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
-            cmd.Parameters.AddWithValue("@userName", user);
-            cmd.Parameters.AddWithValue("@password", pass);
 
-            SqlDataReader rdr = cmd.ExecuteReader();
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            MySqlCommand cmd = new MySqlCommand($"SELECT userId, userName FROM user where userName = '{user}' AND password = '{pass}'", conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.HasRows)
             {
                 rdr.Read();
@@ -116,17 +120,15 @@ namespace C969_Project
         //Creates customer record
         public static void createCustomer(int id, string name, int addressId, int active, DateTime dateTime, string user)
         {
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
 
-            SqlTransaction transaction;
-            transaction = conn.BeginTransaction();
+            MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[Customer] (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
+            var query = "INSERT into [dbo].[customer] (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
                         $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateTime}', '{user}', '{user}')";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+
+            MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
@@ -137,14 +139,11 @@ namespace C969_Project
         public static int getID(string table, string id)
         {
 
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
             var query = $"SELECT max({id}) FROM {table}";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
-
-            SqlDataReader rdr = cmd.ExecuteReader();
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
 
             if (rdr.HasRows)
             {
@@ -168,23 +167,19 @@ namespace C969_Project
         public static int createCountry(string country)
         {
 
-            int countryID = getID("Country", "countryID") + 1;
+            int countryID = getID("country", "countryID") + 1;
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
 
 
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
 
-            SqlTransaction transaction;
-            // Start a local transaction.
-            transaction = conn.BeginTransaction();
+            MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[Country] (countryID, country, createDate, createdBy, lastUpdateBy) " +
+            var query = "INSERT into [dbo].[country] (countryID, country, createDate, createdBy, lastUpdateBy) " +
                         $"VALUES ('{countryID}', '{country}', '{utc}','{user}', '{user}')";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+            MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
@@ -196,22 +191,18 @@ namespace C969_Project
         //Creates city record
         public static int createCity(int countryID, string city)
         {
-            int cityID = getID("City", "cityId") + 1;
+            int cityID = getID("city", "cityId") + 1;
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
 
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
 
-            SqlTransaction transaction;
-            // Start a local transaction.
-            transaction = conn.BeginTransaction();
+            MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[City] (cityId, city, countryId, createDate, createdBy, lastUpdateBy) " +
+            var query = "INSERT into [dbo].[city] (cityId, city, countryId, createDate, createdBy, lastUpdateBy) " +
                         $"VALUES ('{cityID}', '{city}', '{countryID}', '{utc}','{user}', '{user}')";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+            MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
@@ -220,27 +211,23 @@ namespace C969_Project
             return cityID;
 
         }
-
+        
         //Creates address record
         public static int createAddress(int cityID, string address, string postalCode, string phone)
         {
 
-            int addressID = getID("Address", "addressId") + 1;
+            int addressID = getID("address", "addressId") + 1;
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
 
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
 
-            SqlTransaction transaction;
-            // Start a local transaction.
-            transaction = conn.BeginTransaction();
+            MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[Address] (addressId, address, cityId, postalCode, phone, createDate, createdBy, lastUpdateBy) " +
+            var query = "INSERT into [dbo].[address] (addressId, address, cityId, postalCode, phone, createDate, createdBy, lastUpdateBy) " +
                         $"VALUES ('{addressID}', '{address}', '{cityID}', '{postalCode}', '{phone}', '{utc}','{user}', '{user}')";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+            MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
@@ -254,14 +241,12 @@ namespace C969_Project
         {
             var list = new List<KeyValuePair<string, object>>();
             //Get customer Table info
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            var cmd = new System.Data.SqlClient.SqlCommand();
+            var query = $"SELECT * FROM customer WHERE customerId = {customerID}";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
 
-            var query = $"SELECT * FROM Customer WHERE customerId = {customerID}";
-            cmd.CommandText = query;
-            cmd.Connection = conn;
-            SqlDataReader rdr = cmd.ExecuteReader();
+            MySqlDataReader rdr = cmd.ExecuteReader();
             try
             {
                 if (rdr.HasRows)
@@ -282,10 +267,10 @@ namespace C969_Project
                 //Get Address info now that we have addressID
                 var addressID = list.First(kvp => kvp.Key == "addressId").Value;
 
-                var query2 = $"SELECT * FROM Address WHERE addressId = {addressID}";
+                var query2 = $"SELECT * FROM address WHERE addressId = {addressID}";
                 cmd.CommandText = query2;
                 cmd.Connection = conn;
-                SqlDataReader rdr2 = cmd.ExecuteReader();
+                MySqlDataReader rdr2 = cmd.ExecuteReader();
                 if (rdr2.HasRows)
                 {
                     rdr2.Read();
@@ -299,10 +284,10 @@ namespace C969_Project
                 //Get city info now that we have cityID
                 var cityID = list.First(kvp => kvp.Key == "cityId").Value;
 
-                var query3 = $"SELECT * FROM City WHERE cityId = {cityID}";
+                var query3 = $"SELECT * FROM city WHERE cityId = {cityID}";
                 cmd.CommandText = query3;
                 cmd.Connection = conn;
-                SqlDataReader rdr3 = cmd.ExecuteReader();
+                MySqlDataReader rdr3 = cmd.ExecuteReader();
                 if (rdr3.HasRows)
                 {
                     rdr3.Read();
@@ -314,10 +299,10 @@ namespace C969_Project
                 //Get country info now that we have countryId
                 var countryID = list.First(kvp => kvp.Key == "countryId").Value;
 
-                var query4 = $"SELECT * FROM Country WHERE countryId = {countryID}";
+                var query4 = $"SELECT * FROM country WHERE countryId = {countryID}";
                 cmd.CommandText = query4;
                 cmd.Connection = conn;
-                SqlDataReader rdr4 = cmd.ExecuteReader();
+                MySqlDataReader rdr4 = cmd.ExecuteReader();
                 if (rdr4.HasRows)
                 {
                     rdr4.Read();
@@ -354,25 +339,20 @@ namespace C969_Project
             string user = getCurrentUserName();
             DateTime utc = getDateTime();
 
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            SqlTransaction transaction;
-
-            // Start a country transaction.
-            transaction = conn.BeginTransaction();
+            MySqlTransaction transaction = conn.BeginTransaction();
             var query = $"UPDATE country" +
                 $" SET country = '{dictionary["country"]}', lastUpdateBy = '{user}'" +
                 $" WHERE countryId = '{dictionary["countryId"]}'";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+            MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
 
             // Start a city transaction.
             transaction = conn.BeginTransaction();
-            var query2 = $"UPDATE City" +
+            var query2 = $"UPDATE city" +
                 $" SET city = '{dictionary["city"]}', lastUpdateBy = '{user}'" +
                 $" WHERE cityId = '{dictionary["cityId"]}'";
             cmd.CommandText = query2;
@@ -383,7 +363,7 @@ namespace C969_Project
 
             // Start a address transaction.
             transaction = conn.BeginTransaction();
-            var query3 = $"UPDATE Address" +
+            var query3 = $"UPDATE address" +
                 $" SET address = '{dictionary["address"]}', lastUpdateBy = '{user}', postalCode = '{dictionary["postalCode"]}', phone = '{dictionary["phone"]}'" +
                 $" WHERE addressId = '{dictionary["addressId"]}'";
             cmd.CommandText = query3;
@@ -394,7 +374,7 @@ namespace C969_Project
 
             // Start a customer transaction.
             transaction = conn.BeginTransaction();
-            var query4 = $"UPDATE Customer" +
+            var query4 = $"UPDATE customer" +
                 $" SET customerName = '{dictionary["customerName"]}', lastUpdateBy = '{user}', active = '{dictionary["active"]}'" +
                 $" WHERE customerId = '{dictionary["customerId"]}'";
             cmd.CommandText = query4;
@@ -407,15 +387,13 @@ namespace C969_Project
 
         public static void deleteCustomer(IDictionary<string, object> dictionary)
         {
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            SqlTransaction transaction;
-
-            // Start a customer transaction.
-            transaction = conn.BeginTransaction();
-            var query4 = $"DELETE FROM Customer" +
-                $" WHERE customerId = '{dictionary["customerId"]}'";
+            var query4= $"DELETE FROM customer" +
+               $" WHERE customerId = '{dictionary["customerId"]}'";
+            MySqlCommand cmd = new MySqlCommand(query4, conn);
+            MySqlTransaction transaction = conn.BeginTransaction();
+           
             cmd.CommandText = query4;
             cmd.Connection = conn;
             cmd.Transaction = transaction;
@@ -425,7 +403,7 @@ namespace C969_Project
 
             // Start a address transaction.
             transaction = conn.BeginTransaction();
-            var query3 = $"DELETE FROM Address" +
+            var query3 = $"DELETE FROM address" +
                 $" WHERE addressId = '{dictionary["addressId"]}'";
             cmd.CommandText = query3;
             cmd.Connection = conn;
@@ -435,7 +413,7 @@ namespace C969_Project
 
             // Start a city transaction.
             transaction = conn.BeginTransaction();
-            var query2 = $"DELETE FROM City" +
+            var query2 = $"DELETE FROM city" +
                 $" WHERE cityId = '{dictionary["cityId"]}'";
             cmd.CommandText = query2;
             cmd.Connection = conn;
@@ -445,7 +423,7 @@ namespace C969_Project
 
             // Start a country transaction.
             transaction = conn.BeginTransaction();
-            var query = $"DELETE FROM Country" +
+            var query = $"DELETE FROM country" +
                 $" WHERE countryId = '{dictionary["countryId"]}'";
             cmd.CommandText = query;
             cmd.Connection = conn;
@@ -463,22 +441,19 @@ namespace C969_Project
             //Need to create Appointment record  -- int appointmentID, int customerID, int userId, varchar255 title, text description, text location,
             //text contact, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
 
-            int appointID = getID("Appointment", "appointmentId") + 1;
+            int appointID = getID("appointment", "appointmentId") + 1;
             Console.WriteLine(appointID);
             int userID = 1;
             
             DateTime utc = getDateTime();
 
-            SqlConnection conn = new System.Data.SqlClient.SqlConnection(dataString);
+            MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            SqlTransaction transaction;
+            MySqlTransaction transaction = conn.BeginTransaction(); ;
             // Start a local transaction.
-            transaction = conn.BeginTransaction();
-            var query = "INSERT into [dbo].[Appointment] (appointmentId, customerId, userId, title, description, location, contact, type, url, startTime, endTime, createDate, createdBy, lastUpdateBy) " +
-                        $"VALUES ('{appointID}', '{custID}', '{userID}','{title}', '{description}', '{location}', '{contact}', '{type}','{custID}', '{start}','{endTime}','{utc}','{userID}','{userID}')";
-            var cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandText = query;
-            cmd.Connection = conn;
+            var query = "INSERT into appointment (appointmentId, customerId, title, description, location, contact, url, start, end, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{appointID}', '{custID}', '{title}', '{description}', '{location}', '{contact}', '{custID}', '{start}','{endTime}','{utc}','{userID}','{userID}')";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
