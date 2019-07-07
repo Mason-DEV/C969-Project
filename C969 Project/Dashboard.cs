@@ -80,7 +80,7 @@ namespace C969_Project
         
             DateTime filter = week ? calcDateFilter("week") : calcDateFilter("month");
 
-            DataTable dtRecord = DBHelper.dashboard(filter, week);
+            DataTable dtRecord = DBHelper.dashboard(DBHelper.dateSQLFormat(filter), week);
             dataGridView.DataSource = dtRecord;
         }
 
@@ -151,5 +151,6 @@ namespace C969_Project
           
         }
 
+        
     }
 }

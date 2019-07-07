@@ -111,6 +111,7 @@ namespace C969_Project
                 //Input data into text fields
                 fillFields(custList);
             }
+            
         }
 
 
@@ -184,29 +185,6 @@ namespace C969_Project
                 }
 
             }
-
-
-            /*
-            //Grab list, lets change to IDictionary so we can replace easier
-
-            //Grab List & convert
-            var list = getCustList();
-            IDictionary<string, object> dictionary = list.ToDictionary(pair => pair.Key, pair => pair.Value);
-            //replace values for the keys in the form         
-            dictionary["customerName"] = nameTextbox.Text;
-            dictionary["phone"] = phoneTextbox.Text;
-            dictionary["address"] = addressTextbox.Text;
-            dictionary["city"] = cityTextbox.Text;
-            dictionary["postalCode"] = zipTextbox.Text;
-            dictionary["country"] = countryTextbox.Text;
-            dictionary["active"] = yesRadio.Checked ? 1 : 0;
-
-            //Pass the updated IDictionary to dbhelper to update the database
-            DBHelper.updateCustomer(dictionary);
-
-            this.Owner.Show();
-            this.Close();
-            */
         }
     }
 }

@@ -19,14 +19,14 @@ namespace C969_Project
         public Login()
         {
             InitializeComponent();
-            //Supports English or Italian(LCID == 2058);
+            //Supports English or Italian(LCID == 1040);
             languageCheck(CultureInfo.CurrentUICulture.LCID);
-            //languageCheck(2058);
+            //languageCheck(1040);
         }
 
         private void languageCheck(int LCID)
         {
-            if (LCID == 2058)
+            if (LCID == 1040)
             {
                 this.Text = "Accesso";
                 infoLabel.Text = "Inserisci le informazioni di accesso";

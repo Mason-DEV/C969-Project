@@ -41,19 +41,17 @@ namespace C969_Project
             userName = currentUserName;
         }
 
-        public static DataTable dashboard(DateTime filter, bool week) {
+        public static DataTable dashboard(string filter, bool week) {
 
-            Console.WriteLine("doing things");
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-
-            string query = week? $"SELECT customerId as 'Customer ID',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment"// where end < '{filter}' and start > '{getDateTime()}' order by start;"
-                : $"SELECT  customerId as 'Customer ID', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where end < '{filter}' and start > '{getDateTime()}'  order by start;";
-            Console.WriteLine(query);
+            //Week filter where end date and start date are less than a week away
+            //Month filter where end date and start date are less than a month away
+            string query = week ? $"SELECT customerId as 'Customer ID',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' order by start;"
+                : $"SELECT  customerId as 'Customer ID', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' order by start;";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             DataTable dt = new DataTable();
             dt.Load(cmd.ExecuteReader());
-            Console.WriteLine(dt.Rows.Count);
             //Converts the time to localtime from utc in DB
             foreach (DataRow row in dt.Rows)
             {
@@ -332,6 +330,49 @@ namespace C969_Project
             }
         }
 
+        //Lookup appoint info and return it as a list
+        public static List<KeyValuePair<string, object>> searchAppointment(int appointmentID)
+        {
+            var list = new List<KeyValuePair<string, object>>();
+            //Get customer Table info
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            var query = $"SELECT * FROM appointment WHERE appointmentId = {appointmentID}";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            try
+            {
+                if (rdr.HasRows)
+                {
+                    rdr.Read();
+                    list.Add(new KeyValuePair<string, object>("appointmentId", rdr[0]));
+                    list.Add(new KeyValuePair<string, object>("customerId", rdr[1]));
+                    list.Add(new KeyValuePair<string, object>("title", rdr[2]));
+                    list.Add(new KeyValuePair<string, object>("description", rdr[3]));
+                    list.Add(new KeyValuePair<string, object>("location", rdr[4]));
+                    list.Add(new KeyValuePair<string, object>("contact", rdr[5]));
+                    list.Add(new KeyValuePair<string, object>("type", rdr[6]));
+                    list.Add(new KeyValuePair<string, object>("contact", rdr[7]));
+                    list.Add(new KeyValuePair<string, object>("start", rdr[8]));
+                    list.Add(new KeyValuePair<string, object>("end", rdr[9]));
+                    rdr.Close();
+                }
+                else
+                {
+                    MessageBox.Show("No Appointment found with the ID: " + appointmentID, "Please try again");
+                    return null;
+                }
+                
+                return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+
         //Updates the database of all values assoicated with updating customer record
         /*
             Key = customerId, Value = 2
@@ -464,8 +505,8 @@ namespace C969_Project
             conn.Open();
             MySqlTransaction transaction = conn.BeginTransaction(); ;
             // Start a local transaction.
-            var query = "INSERT into appointment (appointmentId, customerId, title, description, location, contact, url, start, end, createDate, createdBy, lastUpdateBy) " +
-                        $"VALUES ('{appointID}', '{custID}', '{title}', '{description}', '{location}', '{contact}', '{custID}', '{start}','{endTime}','{utc}','{userID}','{userID}')";
+            var query = "INSERT into appointment (appointmentId, customerId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{appointID}', '{custID}', '{title}', '{description}', '{location}', '{contact}', '{type}', '{custID}', '{dateSQLFormat(start)}','{dateSQLFormat(endTime)}','{dateSQLFormat(utc)}','{userID}','{userID}')";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();

@@ -30,8 +30,7 @@ namespace C969_Project
 
             try
             {
-                //string query = "select customerId, (customerName + ' -- ID: ' +  CONVERT(varchar(10), customerId)) as Display from customer;";
-                string query = "select customerId as Display from customer";
+                string query = "SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
                 MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                 conn.Open();
                 DataSet ds = new DataSet();
