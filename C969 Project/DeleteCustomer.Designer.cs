@@ -49,8 +49,8 @@
             this.addressLabel = new System.Windows.Forms.Label();
             this.phoneLabel = new System.Windows.Forms.Label();
             this.nameLabel = new System.Windows.Forms.Label();
-            this.customerIdTextbox = new System.Windows.Forms.TextBox();
             this.idLabel = new System.Windows.Forms.Label();
+            this.custComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // clearButton
@@ -254,29 +254,30 @@
             this.nameLabel.TabIndex = 54;
             this.nameLabel.Text = "Name:";
             // 
-            // customerIdTextbox
-            // 
-            this.customerIdTextbox.Location = new System.Drawing.Point(110, 43);
-            this.customerIdTextbox.Name = "customerIdTextbox";
-            this.customerIdTextbox.Size = new System.Drawing.Size(143, 20);
-            this.customerIdTextbox.TabIndex = 75;
-            // 
             // idLabel
             // 
             this.idLabel.AutoSize = true;
             this.idLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.idLabel.Location = new System.Drawing.Point(12, 43);
             this.idLabel.Name = "idLabel";
-            this.idLabel.Size = new System.Drawing.Size(78, 13);
+            this.idLabel.Size = new System.Drawing.Size(103, 13);
             this.idLabel.TabIndex = 74;
-            this.idLabel.Text = "Customer Id:";
+            this.idLabel.Text = "Customer Select:";
+            // 
+            // custComboBox
+            // 
+            this.custComboBox.FormattingEnabled = true;
+            this.custComboBox.Location = new System.Drawing.Point(121, 40);
+            this.custComboBox.Name = "custComboBox";
+            this.custComboBox.Size = new System.Drawing.Size(144, 21);
+            this.custComboBox.TabIndex = 76;
             // 
             // DeleteCustomer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(301, 449);
-            this.Controls.Add(this.customerIdTextbox);
+            this.Controls.Add(this.custComboBox);
             this.Controls.Add(this.idLabel);
             this.Controls.Add(this.clearButton);
             this.Controls.Add(this.searchButton);
@@ -329,7 +330,7 @@
         private System.Windows.Forms.Label addressLabel;
         private System.Windows.Forms.Label phoneLabel;
         private System.Windows.Forms.Label nameLabel;
-        private System.Windows.Forms.TextBox customerIdTextbox;
         private System.Windows.Forms.Label idLabel;
+        private System.Windows.Forms.ComboBox custComboBox;
     }
 }

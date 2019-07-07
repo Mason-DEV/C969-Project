@@ -36,7 +36,7 @@ namespace C969_Project
                 //Need to create address record
                 int addressID = DBHelper.createAddress(cityID, addressTextbox.Text, zipTextbox.Text, phoneTextbox.Text);
                 //Need to create customer record  -- customerID, name, adressID, active, create date, createdby, lastUpdate, updatedby
-                DBHelper.createCustomer(DBHelper.getID("Customer", "customerId")+1, nameTextbox.Text, addressID, yesRadio.Checked ? 1 : 0, DBHelper.getDateTime(), DBHelper.getCurrentUserName());
+                DBHelper.createCustomer(DBHelper.getID("customer", "customerId")+1, nameTextbox.Text, addressID, yesRadio.Checked ? 1 : 0, DBHelper.getDateTime(), DBHelper.getCurrentUserName());
 
                 this.Owner.Show();
                 this.Close();

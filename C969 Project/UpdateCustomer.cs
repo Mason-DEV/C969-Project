@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,7 @@ namespace C969_Project
         public UpdateCustomer()
         {
             InitializeComponent();
+            fillCust();
         }
 
         public void setCustList(List<KeyValuePair<string, object>> list)
@@ -38,6 +40,29 @@ namespace C969_Project
         {
             this.Owner.Show();
             this.Hide();
+        }
+
+        public void fillCust()
+        {
+            MySqlConnection conn = new MySqlConnection(DBHelper.getDataString());
+
+            try
+            {
+                string query = "SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
+                //string query = "select customerId as Display from customer";
+                MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
+                conn.Open();
+                DataSet ds = new DataSet();
+                da.Fill(ds, "Cust");
+                custComboBox.DisplayMember = "Display";
+                custComboBox.ValueMember = "customerID";
+                custComboBox.DataSource = ds.Tables["Cust"];
+            }
+            catch (Exception ex)
+            {
+                // write exception info to log or anything else
+                MessageBox.Show("Error occured! " + ex);
+            }
         }
 
         private void clearButton_Click(object sender, EventArgs e)
@@ -72,7 +97,8 @@ namespace C969_Project
 
 
             //Grabs ID
-            int id = Convert.ToInt32(customerIdTextbox.Text);
+            DataRowView drv = custComboBox.SelectedItem as DataRowView;
+            int id = Convert.ToInt32(custComboBox.SelectedValue);
             var custList = DBHelper.searchCustomer(id);
             setCustList(custList);
             //Calls db helper to get all customer results as object array
@@ -122,6 +148,45 @@ namespace C969_Project
 
         private void UpdateButton_Click(object sender, EventArgs e)
         {
+            DialogResult youSure = MessageBox.Show("Are you sure you want to update this customer?", "", MessageBoxButtons.YesNo);
+            if (youSure == DialogResult.Yes)
+            {
+                //Update the things
+                try
+                {
+                    //Grab List & convert
+                    var list = getCustList();
+                    IDictionary<string, object> dictionary = list.ToDictionary(pair => pair.Key, pair => pair.Value);
+                    //replace values for the keys in the form         
+                    dictionary["customerName"] = nameTextbox.Text;
+                    dictionary["phone"] = phoneTextbox.Text;
+                    dictionary["address"] = addressTextbox.Text;
+                    dictionary["city"] = cityTextbox.Text;
+                    dictionary["postalCode"] = zipTextbox.Text;
+                    dictionary["country"] = countryTextbox.Text;
+                    dictionary["active"] = yesRadio.Checked ? 1 : 0;
+
+                    //Pass the updated IDictionary to dbhelper to update the database
+                    DBHelper.updateCustomer(dictionary);
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                finally
+                {
+                    clearButton_Click(null, new EventArgs());
+                    MessageBox.Show("Customer Record Updated");
+
+                    this.Owner.Show();
+                    this.Close();
+                }
+
+            }
+
+
+            /*
             //Grab list, lets change to IDictionary so we can replace easier
 
             //Grab List & convert
@@ -139,6 +204,9 @@ namespace C969_Project
             //Pass the updated IDictionary to dbhelper to update the database
             DBHelper.updateCustomer(dictionary);
 
+            this.Owner.Show();
+            this.Close();
+            */
         }
     }
 }

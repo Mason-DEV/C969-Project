@@ -116,17 +116,30 @@ namespace C969_Project
 
         }
 
+        public static string dateSQLFormat(DateTime dateValue)
+        {
+            string formatForMySql = dateValue.ToString("yyyy-MM-dd HH:mm");
+
+            return formatForMySql;
+        }
+
 
         //Creates customer record
         public static void createCustomer(int id, string name, int addressId, int active, DateTime dateTime, string user)
         {
+
+            string sqlDate = dateSQLFormat(dateTime);
+            Console.WriteLine(dateTime);
+            Console.WriteLine(sqlDate);
+
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
 
             MySqlTransaction transaction = conn.BeginTransaction();
+            
 
-            var query = "INSERT into [dbo].[customer] (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
-                        $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateTime}', '{user}', '{user}')";
+            var query = "INSERT into customer (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateSQLFormat(dateTime)}', '{user}', '{user}')";
 
             MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
@@ -177,8 +190,8 @@ namespace C969_Project
 
             MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[country] (countryID, country, createDate, createdBy, lastUpdateBy) " +
-                        $"VALUES ('{countryID}', '{country}', '{utc}','{user}', '{user}')";
+            var query = "INSERT into country (countryID, country, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{countryID}', '{country}', '{dateSQLFormat(utc)}','{user}', '{user}')";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
@@ -200,8 +213,8 @@ namespace C969_Project
 
             MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[city] (cityId, city, countryId, createDate, createdBy, lastUpdateBy) " +
-                        $"VALUES ('{cityID}', '{city}', '{countryID}', '{utc}','{user}', '{user}')";
+            var query = "INSERT into city (cityId, city, countryId, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{cityID}', '{city}', '{countryID}', '{dateSQLFormat(utc)}','{user}', '{user}')";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
@@ -225,8 +238,8 @@ namespace C969_Project
 
             MySqlTransaction transaction = conn.BeginTransaction();
 
-            var query = "INSERT into [dbo].[address] (addressId, address, cityId, postalCode, phone, createDate, createdBy, lastUpdateBy) " +
-                        $"VALUES ('{addressID}', '{address}', '{cityID}', '{postalCode}', '{phone}', '{utc}','{user}', '{user}')";
+            var query = "INSERT into address (addressId, address, cityId, postalCode, phone, createDate, createdBy, lastUpdateBy) " +
+                        $"VALUES ('{addressID}', '{address}', '{cityID}', '{postalCode}', '{phone}', '{dateSQLFormat(utc)}','{user}', '{user}')";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();

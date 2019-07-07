@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,6 +17,7 @@ namespace C969_Project
         public DeleteCustomer()
         {
             InitializeComponent();
+            fillCust();
         }
 
         private void cancelButton_Click(object sender, EventArgs e)
@@ -35,6 +37,29 @@ namespace C969_Project
         {
 
             return CustList;
+        }
+
+        public void fillCust()
+        {
+            MySqlConnection conn = new MySqlConnection(DBHelper.getDataString());
+
+            try
+            {
+                string query = "SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
+                //string query = "select customerId as Display from customer";
+                MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
+                conn.Open();
+                DataSet ds = new DataSet();
+                da.Fill(ds, "Cust");
+                custComboBox.DisplayMember = "Display";
+                custComboBox.ValueMember = "customerID";
+                custComboBox.DataSource = ds.Tables["Cust"];
+            }
+            catch (Exception ex)
+            {
+                // write exception info to log or anything else
+                MessageBox.Show("Error occured! " + ex);
+            }
         }
 
         private void ClearButton_Click(object sender, EventArgs e)
@@ -80,23 +105,24 @@ namespace C969_Project
             }
         }
 
-            private void SearchButton_Click(object sender, EventArgs e)
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+            //Grabs ID
+            DataRowView drv = custComboBox.SelectedItem as DataRowView;
+            int id = Convert.ToInt32(custComboBox.SelectedValue);
+            var custList = DBHelper.searchCustomer(id);
+            setCustList(custList);
+            //Calls db helper to get all customer results as object array
+            //object[] custArray = null; //DBHelper.searchCustomer(id);
+            //If we got a null array, don't continue
+            if (custList != null)
             {
-                //Grabs ID
-                int id = Convert.ToInt32(customerIdTextbox.Text);
-                var custList = DBHelper.searchCustomer(id);
-                setCustList(custList);
-                //Calls db helper to get all customer results as object array
-                //object[] custArray = null; //DBHelper.searchCustomer(id);
-                //If we got a null array, don't continue
-                if (custList != null)
-                {
-                    //Enable fields
-                    enabling(true);
-                    //Input data into text fields
-                    fillFields(custList);
-                }
+                //Enable fields
+                enabling(true);
+                //Input data into text fields
+                fillFields(custList);
             }
+        }
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
@@ -119,10 +145,13 @@ namespace C969_Project
                 {
                     ClearButton_Click(null, new EventArgs());
                     MessageBox.Show("Customer Record Deleted");
+
+                    this.Owner.Show();
+                    this.Close();
                 }
-                
+
             }
-            
+
         }
     }
 }
