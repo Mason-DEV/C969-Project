@@ -18,7 +18,6 @@ namespace C969_Project
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new DeleteCustomer());
             Application.Run(new Login());
         }
     }
