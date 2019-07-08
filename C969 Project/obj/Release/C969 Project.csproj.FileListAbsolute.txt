@@ -1,0 +1,26 @@
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\C969 Project.exe.config
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\C969 Project.exe
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\C969 Project.pdb
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\BouncyCastle.Crypto.dll
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\Google.Protobuf.dll
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\MySql.Data.dll
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\Google.Protobuf.xml
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\bin\Release\MySql.Data.xml
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969 Project.csprojAssemblyReference.cache
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.CreateCustomer.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.Dashboard.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.DeleteCustomer.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.Login.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.Properties.Resources.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.UpdateCustomer.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969 Project.csproj.GenerateResource.cache
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969 Project.csproj.CoreCompileInputs.cache
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969 Project.csproj.CopyComplete
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969 Project.exe
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969 Project.pdb
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.AddAppoint.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.Appointment.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.DeleteAppoint.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.Schedule.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.Timecard.resources
+C:\Users\Mason\Documents\GitHub\C969-Project\C969 Project\obj\Release\C969_Project.UpdateAppoint.resources
