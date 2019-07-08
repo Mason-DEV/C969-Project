@@ -163,7 +163,7 @@
             this.febLabel.Name = "febLabel";
             this.febLabel.Size = new System.Drawing.Size(85, 20);
             this.febLabel.TabIndex = 28;
-            this.febLabel.Text = "Feburary:";
+            this.febLabel.Text = "February:";
             // 
             // janLabel
             // 
@@ -183,9 +183,9 @@
             this.decLabel.ForeColor = System.Drawing.Color.RoyalBlue;
             this.decLabel.Location = new System.Drawing.Point(352, 362);
             this.decLabel.Name = "decLabel";
-            this.decLabel.Size = new System.Drawing.Size(106, 20);
+            this.decLabel.Size = new System.Drawing.Size(96, 20);
             this.decLabel.TabIndex = 38;
-            this.decLabel.Text = "Decemeber:";
+            this.decLabel.Text = "December:";
             // 
             // novLabel
             // 
@@ -216,9 +216,9 @@
             this.septLabel.ForeColor = System.Drawing.Color.RoyalBlue;
             this.septLabel.Location = new System.Drawing.Point(352, 267);
             this.septLabel.Name = "septLabel";
-            this.septLabel.Size = new System.Drawing.Size(112, 20);
+            this.septLabel.Size = new System.Drawing.Size(102, 20);
             this.septLabel.TabIndex = 35;
-            this.septLabel.Text = "Septemeber:";
+            this.septLabel.Text = "September:";
             // 
             // augLabel
             // 

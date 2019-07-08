@@ -60,7 +60,7 @@ namespace C969_Project
         {
             //Locks fields
             enabling(false);
-            //Lamba function TODO: give reason why I used this; 
+            //Lamba used for function to clear fields
             Action<Control.ControlCollection> clearIT = null;
 
             clearIT = (controls) =>
@@ -89,7 +89,6 @@ namespace C969_Project
                 DialogResult youSure = MessageBox.Show("Are you sure you want to update this Appointment?", "", MessageBoxButtons.YesNo);
                 if (youSure == DialogResult.Yes)
                 {
-                    //Update the things
                     try
                     {
                         //Grab List & convert
@@ -138,7 +137,6 @@ namespace C969_Project
 
                 try
                 {
-                    //string query = "SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
                     string query = "select appointmentId, concat(appointmentId, (select  concat(' -- Customer: ', customerName) from customer where appointment.customerId = customer.customerId))  as Display from appointment where end > now();";
                     MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                     conn.Open();
@@ -150,7 +148,6 @@ namespace C969_Project
                 }
                 catch (Exception ex)
                 {
-                    // write exception info to log or anything else
                     Console.WriteLine("Error occured! " + ex);
                 }
             }
@@ -162,7 +159,6 @@ namespace C969_Project
                 try
                 {
                     string query = $"SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
-                    //string query = "select customerId as Display from customer";
                     MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                     conn.Open();
                     DataSet ds = new DataSet();
@@ -194,7 +190,7 @@ namespace C969_Project
 
             private void fillFields(List<KeyValuePair<string, object>> AppointList)
             {
-                //Lambda
+                // Lambda used to set text values from kvp
                 titleTextbox.Text = AppointList.First(kvp => kvp.Key == "title").Value.ToString();
                 descriptionTextbox.Text = AppointList.First(kvp => kvp.Key == "description").Value.ToString();
                 locationTextbox.Text = AppointList.First(kvp => kvp.Key == "location").Value.ToString();

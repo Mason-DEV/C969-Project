@@ -350,7 +350,7 @@ namespace C969_Project
             }
         }
 
-
+        //Updates customer
         public static void updateCustomer(IDictionary<string, object> dictionary)
         {
             string user = getCurrentUserName();
@@ -402,6 +402,7 @@ namespace C969_Project
             conn.Close();
         }
 
+        //Deletes customer 
         public static void deleteCustomer(IDictionary<string, object> dictionary)
         {
             MySqlConnection conn = new MySqlConnection(dataString);
@@ -452,12 +453,9 @@ namespace C969_Project
 
         }
 
-
+        //This creates an appointment
         public static void createAppointment(int custID, string title, string description, string location, string contact, string type, DateTime start, DateTime endTime)
         {
-            //Need to create Appointment record  -- int appointmentID, int customerID, int userId, varchar255 title, text description, text location,
-            //text contact, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
-
             int appointID = getID("appointment", "appointmentId") + 1;
             int userID = 1;
 
@@ -476,6 +474,7 @@ namespace C969_Project
             conn.Close();
 
         }
+        //Updates appointment
         public static void updateAppointment(IDictionary<string, object> dictionary)
         {
             string user = getCurrentUserName();
@@ -497,6 +496,7 @@ namespace C969_Project
             conn.Close();
         }
 
+        //Deletes appointment
         public static void deleteAppointment(IDictionary<string, object> dictionary)
         {
             MySqlConnection conn = new MySqlConnection(dataString);
@@ -513,7 +513,7 @@ namespace C969_Project
             conn.Close();
         }
 
-
+        //Returns dictionary of next appointment
         public static Dictionary<string, object> getNextAppointInfo()
         {
             Dictionary<string, object> appointINFO = new Dictionary<string, object>();
@@ -551,14 +551,13 @@ namespace C969_Project
             return 0;
         }
 
-
+        //Returns datatable for schedule
         public static DataTable schedule(string id)
         {
 
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            //Week filter where end date and start date are less than a week away
-            //Month filter where end date and start date are less than a month away
+
             string query = $"SELECT (select customerName from customer where customerId = appointment.customerId) as 'Customer',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where createdBy = '{id}' order by start;";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             DataTable dt = new DataTable();
@@ -575,7 +574,7 @@ namespace C969_Project
             conn.Close();
             return dt;
         }
-
+        //Returns dictionary for report on appointments
         public static Dictionary<string, object> reportAppoint(string item)
         {
             Dictionary<string, object> reportINFO = new Dictionary<string, object>();
@@ -618,7 +617,7 @@ namespace C969_Project
 
             return reportINFO;
         }
-
+        //Returns true if customerId is assoicated with appointment
         public static bool appointExist(string custID)
         {
             Console.WriteLine(custID);
@@ -637,7 +636,7 @@ namespace C969_Project
             }
             return false;
         }
-
+        //removes all appointments with customerId
         public static void noCustAppointments(string custID)
         {
             MySqlConnection conn = new MySqlConnection(dataString);

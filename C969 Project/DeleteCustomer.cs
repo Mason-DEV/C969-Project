@@ -46,7 +46,6 @@ namespace C969_Project
             try
             {
                 string query = "SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
-                //string query = "select customerId as Display from customer";
                 MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                 conn.Open();
                 DataSet ds = new DataSet();
@@ -57,7 +56,6 @@ namespace C969_Project
             }
             catch (Exception ex)
             {
-                // write exception info to log or anything else
                 MessageBox.Show("Error occured! " + ex);
             }
         }
@@ -66,7 +64,7 @@ namespace C969_Project
         {
             //Locks fields
             enabling(false);
-            //Lamba function TODO: give reason why I used this; 
+            //Lamba used for function to clear fields
             Action<Control.ControlCollection> clearIT = null;
 
             clearIT = (controls) =>
@@ -88,7 +86,7 @@ namespace C969_Project
         }
         private void fillFields(List<KeyValuePair<string, object>> custList)
         {
-            //Lambda
+            // Lambda used to set text values from kvp
             nameTextbox.Text = custList.First(kvp => kvp.Key == "customerName").Value.ToString();
             phoneTextbox.Text = custList.First(kvp => kvp.Key == "phone").Value.ToString();
             addressTextbox.Text = custList.First(kvp => kvp.Key == "address").Value.ToString();
@@ -113,7 +111,6 @@ namespace C969_Project
             var custList = DBHelper.searchCustomer(id);
             setCustList(custList);
             //Calls db helper to get all customer results as object array
-            //object[] custArray = null; //DBHelper.searchCustomer(id);
             //If we got a null array, don't continue
             if (custList != null)
             {
@@ -129,7 +126,6 @@ namespace C969_Project
             DialogResult youSure = MessageBox.Show("Are you sure you want to delete this customer?", "", MessageBoxButtons.YesNo);
             if (youSure == DialogResult.Yes)
             {
-                //Delete the things
                 try
                 {
                     //Grab List & convert
