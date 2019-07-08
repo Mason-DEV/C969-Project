@@ -57,6 +57,7 @@ namespace C969_Project
                 custComboBox.DisplayMember = "Display";
                 custComboBox.ValueMember = "customerID";
                 custComboBox.DataSource = ds.Tables["Cust"];
+
             }
             catch (Exception ex)
             {

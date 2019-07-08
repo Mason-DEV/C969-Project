@@ -49,6 +49,8 @@ namespace C969_Project
                 Logger.signIn(DBHelper.getCurrentUserName());
                 //Show Dashboard
                 Form dash = new Dashboard();
+                //Function that handles appointment reminder
+                Logger.reminder();
                 dash.Show();
                 this.Hide();
             }

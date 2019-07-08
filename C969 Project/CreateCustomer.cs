@@ -63,12 +63,11 @@ namespace C969_Project
                 showError(zipLabel.Text);
                 return false;
             }
-            /*
+
             if (emptyCheck() == false)
             {
                 MessageBox.Show("Please complete all Customer Information fields.");
             }
-            */
 
             return true;
         }

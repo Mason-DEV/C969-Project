@@ -20,6 +20,11 @@ namespace C969_Project
         {
             InitializeComponent();
             this.FormClosing += Dashboard_FormClosing;
+            this.Activated += new System.EventHandler(this.Dashboard_Activated);
+        }
+        
+        private void Dashboard_Activated(object sender, EventArgs e)
+        {
             Dashboard_Load(weekViewRadio.Checked);
         }
 
@@ -75,11 +80,28 @@ namespace C969_Project
             this.Hide();
         }
 
-        private void Dashboard_Load(bool week)
+
+        private void UpdateApptButton_Click(object sender, EventArgs e)
+        {
+            Form updateAppoint = new UpdateAppoint();
+            updateAppoint.Owner = this;
+            updateAppoint.Show();
+            this.Hide();
+        }
+
+        private void DeleteApptButton_Click(object sender, EventArgs e)
+        {
+            Form deleteAppint = new DeleteAppoint();
+            deleteAppint.Owner = this;
+            deleteAppint.Show();
+            this.Hide();
+
+        }
+
+        public void Dashboard_Load(bool week)
         {
         
             DateTime filter = week ? calcDateFilter("week") : calcDateFilter("month");
-
             DataTable dtRecord = DBHelper.dashboard(DBHelper.dateSQLFormat(filter), week);
             dataGridView.DataSource = dtRecord;
         }
@@ -104,7 +126,7 @@ namespace C969_Project
             }
         }
 
-
+        /*
         private Timer timer;
         public void InitTimer()
         {
@@ -150,7 +172,7 @@ namespace C969_Project
             }
           
         }
+            */
 
-        
     }
 }

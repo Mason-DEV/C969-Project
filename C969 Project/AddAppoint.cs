@@ -36,7 +36,7 @@ namespace C969_Project
                 DataSet ds = new DataSet();
                 da.Fill(ds, "Cust");
                 custComboBox.DisplayMember = "Display";
-                custComboBox.ValueMember = "customerID";
+                custComboBox.ValueMember = "customerId";
                 custComboBox.DataSource = ds.Tables["Cust"];
             }
             catch (Exception ex)
@@ -53,7 +53,7 @@ namespace C969_Project
                 //Have a customer selected so lets add the appointment
                 //customerID
                 DataRowView drv = custComboBox.SelectedItem as DataRowView;
-                int custID = 1;// Convert.ToInt32(custComboBox.SelectedValue);
+                int custID = Convert.ToInt32(custComboBox.SelectedValue);
                 //grab data fields from form
 
                 DateTime start = startDTP.Value.ToUniversalTime();
@@ -61,8 +61,9 @@ namespace C969_Project
                 //Validations
                 //appointment is not being set outside business hours
                 //appointment is not being set overlapping another appointment
-
+                Console.WriteLine(this);
                 int validated = appointmentValid(start, end);
+
                 Console.WriteLine(validated);
                 switch (validated)
                 {

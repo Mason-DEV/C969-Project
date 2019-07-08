@@ -18,7 +18,8 @@ namespace C969_Project
         public static string dataString = "server=52.206.157.109;database=U05lxQ;uid=U05lxQ;pwd=53688540778; convert zero datetime=True";
 
 
-        public static string getDataString() {
+        public static string getDataString()
+        {
             return dataString;
         }
         public static int getCurrentUserId()
@@ -41,14 +42,16 @@ namespace C969_Project
             userName = currentUserName;
         }
 
-        public static DataTable dashboard(string filter, bool week) {
+        public static DataTable dashboard(string filter, bool week)
+        {
 
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
             //Week filter where end date and start date are less than a week away
             //Month filter where end date and start date are less than a month away
-            string query = week ? $"SELECT customerId as 'Customer ID',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' order by start;"
-                : $"SELECT  customerId as 'Customer ID', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' order by start;";
+            string query = week ? $"SELECT customerId as 'Customer ID',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' and start > now() order by start;"
+                : $"SELECT  customerId as 'Customer ID', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' and start > now() order by start;";
+            Console.WriteLine(query);
             MySqlCommand cmd = new MySqlCommand(query, conn);
             DataTable dt = new DataTable();
             dt.Load(cmd.ExecuteReader());
@@ -134,7 +137,7 @@ namespace C969_Project
             conn.Open();
 
             MySqlTransaction transaction = conn.BeginTransaction();
-            
+
 
             var query = "INSERT into customer (customerId, customerName, addressId,active, createDate, createdBy, lastUpdateBy) " +
                         $"VALUES ('{id}', '{name}',  '{addressId}', '{active}', '{dateSQLFormat(dateTime)}', '{user}', '{user}')";
@@ -222,7 +225,7 @@ namespace C969_Project
             return cityID;
 
         }
-        
+
         //Creates address record
         public static int createAddress(int cityID, string address, string postalCode, string phone)
         {
@@ -353,9 +356,8 @@ namespace C969_Project
                     list.Add(new KeyValuePair<string, object>("location", rdr[4]));
                     list.Add(new KeyValuePair<string, object>("contact", rdr[5]));
                     list.Add(new KeyValuePair<string, object>("type", rdr[6]));
-                    list.Add(new KeyValuePair<string, object>("contact", rdr[7]));
-                    list.Add(new KeyValuePair<string, object>("start", rdr[8]));
-                    list.Add(new KeyValuePair<string, object>("end", rdr[9]));
+                    list.Add(new KeyValuePair<string, object>("start", rdr[7]));
+                    list.Add(new KeyValuePair<string, object>("end", rdr[8]));
                     rdr.Close();
                 }
                 else
@@ -363,7 +365,7 @@ namespace C969_Project
                     MessageBox.Show("No Appointment found with the ID: " + appointmentID, "Please try again");
                     return null;
                 }
-                
+
                 return list;
             }
             catch (Exception ex)
@@ -443,17 +445,17 @@ namespace C969_Project
         {
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            var query4= $"DELETE FROM customer" +
+            var query4 = $"DELETE FROM customer" +
                $" WHERE customerId = '{dictionary["customerId"]}'";
             MySqlCommand cmd = new MySqlCommand(query4, conn);
             MySqlTransaction transaction = conn.BeginTransaction();
-           
+
             cmd.CommandText = query4;
             cmd.Connection = conn;
             cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             transaction.Commit();
-            
+
 
             // Start a address transaction.
             transaction = conn.BeginTransaction();
@@ -498,7 +500,7 @@ namespace C969_Project
             int appointID = getID("appointment", "appointmentId") + 1;
             Console.WriteLine(appointID);
             int userID = 1;
-            
+
             DateTime utc = getDateTime();
 
             MySqlConnection conn = new MySqlConnection(dataString);
@@ -512,10 +514,90 @@ namespace C969_Project
             cmd.ExecuteNonQuery();
             transaction.Commit();
             conn.Close();
-            
+
         }
+        public static void updateAppointment(IDictionary<string, object> dictionary)
+        {
+            string user = getCurrentUserName();
+            DateTime utc = getDateTime();
+            DateTime start = Convert.ToDateTime(dictionary["start"]);
+            DateTime end = Convert.ToDateTime(dictionary["end"]);
+
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            MySqlTransaction transaction = conn.BeginTransaction();
+            var query = $"UPDATE appointment" +
+                $" SET customerId = '{dictionary["customerId"]}', title = '{dictionary["title"]}', description = '{dictionary["description"]}' , location = '{dictionary["location"]}' , contact = '{dictionary["contact"]}' , " +
+                $" type = '{dictionary["type"]}' ,  start = '{dateSQLFormat(start)}' , end = '{dateSQLFormat(end)}' , url = '{dictionary["url"]}' , lastUpdate = '{dateSQLFormat(utc)}',  lastUpdateBy = '{user}' " +
+                $" WHERE appointmentId = '{dictionary["appointmentId"]}'";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
+        }
+
+        public static void deleteAppointment(IDictionary<string, object> dictionary)
+        {
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            var query = $"DELETE FROM appointment" +
+               $" WHERE appointmentId = '{dictionary["appointmentId"]}'";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlTransaction transaction = conn.BeginTransaction();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
+        }
+
+
+        public static Dictionary<string, object> getNextAppointInfo()
+        {
+            Dictionary<string, object> appointINFO = new Dictionary<string, object>();
+
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            //ample: “You have a meeting with Client X at 2PM” (Most specific) //Best
+            var query = " Select start, (select customerName from customer where customerId = appointment.customerId ) as 'Name' from appointment  where start > now() order by  start limit 1;";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                appointINFO.Add("start", Convert.ToDateTime(rdr[0]).ToLocalTime());
+                appointINFO.Add("name", rdr[1]);
+            }
+
+
+            return appointINFO;
+        }
+        /*
+        public static DateTime? getNextAppointStart()
+        {
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            //ample: “You have a meeting with Client X at 2PM” (Most specific) //Best
+            var query = "Select start, location from appointment where start > now() order by  start limit 1;";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                if (rdr[0] == DBNull.Value)
+                {
+
+                    return null;
+                }
+
+                return
+            }
+            return null;
+        }
+        */
     }
-
-
 }
 

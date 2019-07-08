@@ -102,6 +102,12 @@
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
     <Compile Include="DBHelper.cs" />
+    <Compile Include="DeleteAppoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteAppoint.Designer.cs">
+      <DependentUpon>DeleteAppoint.cs</DependentUpon>
+    </Compile>
     <Compile Include="DeleteCustomer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -142,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeleteAppoint.resx">
+      <DependentUpon>DeleteAppoint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DeleteCustomer.resx">
       <DependentUpon>DeleteCustomer.cs</DependentUpon>

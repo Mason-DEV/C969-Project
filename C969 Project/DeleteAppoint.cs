@@ -11,15 +11,14 @@ using System.Windows.Forms;
 
 namespace C969_Project
 {
-    public partial class UpdateAppoint : Form
+    public partial class DeleteAppoint : Form
     {
         public static List<KeyValuePair<string, object>> AppointList;
-        public UpdateAppoint()
+        public DeleteAppoint()
         {
             InitializeComponent();
             fillAppoint();
         }
-
         public void setAppointList(List<KeyValuePair<string, object>> list)
         {
 
@@ -32,8 +31,6 @@ namespace C969_Project
 
             return AppointList;
         }
-
-
         private void SearchButton_Click(object sender, EventArgs e)
         {
             //Grabs ID
@@ -53,9 +50,35 @@ namespace C969_Project
                 //Grabs customer assoicated with appointment
                 fillCust(Convert.ToInt32(appointList.First(kvp => kvp.Key == "customerId").Value.ToString()));
             }
-
         }
 
+        private void DeleteButton_Click(object sender, EventArgs e)
+        {
+            DialogResult youSure = MessageBox.Show("Are you sure you want to delete this Appointment?", "", MessageBoxButtons.YesNo);
+            if (youSure == DialogResult.Yes)
+            {
+                //Delete the things
+                try
+                {
+                    //Grab List & convert
+                    var list = getAppointList();
+                    IDictionary<string, object> dictionary = list.ToDictionary(pair => pair.Key, pair => pair.Value);
+                    DBHelper.deleteAppointment(dictionary);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                finally
+                {
+                    ClearButton_Click(null, new EventArgs());
+                    MessageBox.Show("Appointment Deleted");
+
+                    this.Owner.Show();
+                    this.Close();
+                }
+            }
+        }
         private void ClearButton_Click(object sender, EventArgs e)
         {
             //Locks fields
@@ -79,60 +102,17 @@ namespace C969_Project
             clearIT(Controls);
         }
 
-        private void UpdateButton_Click(object sender, EventArgs e)
-        {
-            Console.WriteLine(customerComboBox.SelectedValue);
-            DialogResult youSure = MessageBox.Show("Are you sure you want to update this Appointment?", "", MessageBoxButtons.YesNo);
-            if (youSure == DialogResult.Yes)
-            {
-                //Update the things
-                try
-                {
-                    //Grab List & convert
-                    var list = getAppointList();
-                    IDictionary<string, object> dictionary = list.ToDictionary(pair => pair.Key, pair => pair.Value);
-                    //replace values for the keys in the form         
-                    dictionary["appointmentId"] = AppointList.First(kvp => kvp.Key == "appointmentId").Value;
-                    dictionary["customerId"] = customerComboBox.SelectedValue;
-                    dictionary["title"] = titleTextbox.Text;
-                    dictionary["description"] = descriptionTextbox.Text;
-                    dictionary["location"] = locationTextbox.Text;
-                    dictionary["contact"] = contactTextbox.Text;
-                    dictionary["type"] = typeTextbox.Text;
-                    dictionary["start"] = startDTP.Value;
-                    dictionary["end"] = endDTP.Value;
-                    dictionary["url"] = customerComboBox.SelectedValue;
-
-                    //Pass the updated IDictionary to dbhelper to update the database
-                    DBHelper.updateAppointment(dictionary);
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error occured! " + ex);
-                }
-                finally
-                {
-                    ClearButton_Click(null, new EventArgs());
-                    MessageBox.Show("Customer Record Updated");
-                    this.Owner.Show();
-                    this.Close();
-                }
-            }
-        }
-
         private void CancelButton_Click(object sender, EventArgs e)
         {
-
+            this.Owner.Show();
+            this.Hide();
         }
-
         public void fillAppoint()
         {
             MySqlConnection conn = new MySqlConnection(DBHelper.getDataString());
 
             try
             {
-                //string query = "SELECT customerId, concat(customerName, ' -- ID: ', customerId) as Display FROM customer;";
                 string query = "select appointmentId, concat(appointmentId, (select  concat(' -- Customer: ', customerName) from customer where appointment.customerId = customer.customerId))  as Display from appointment;";
                 MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                 conn.Open();
@@ -148,7 +128,6 @@ namespace C969_Project
                 Console.WriteLine("Error occured! " + ex);
             }
         }
-
         public void fillCust(int custID)
         {
             MySqlConnection conn = new MySqlConnection(DBHelper.getDataString());
@@ -173,19 +152,6 @@ namespace C969_Project
             }
         }
 
-        private void enabling(bool status)
-        {
-            customerComboBox.Enabled = status;
-            titleTextbox.Enabled = status;
-            descriptionTextbox.Enabled = status;
-            locationTextbox.Enabled = status;
-            contactTextbox.Enabled = status;
-            typeTextbox.Enabled = status;
-            startDTP.Enabled = status;
-            endDTP.Enabled = status;
-            updateButton.Enabled = status;
-        }
-
         private void fillFields(List<KeyValuePair<string, object>> AppointList)
         {
             //Lambda
@@ -199,6 +165,11 @@ namespace C969_Project
             startDTP.Value = Convert.ToDateTime(start).ToLocalTime();
             endDTP.Value = Convert.ToDateTime(end).ToLocalTime();
 
+        }
+
+        private void enabling(bool status)
+        {
+            deleteButton.Enabled = status;
         }
     }
 }

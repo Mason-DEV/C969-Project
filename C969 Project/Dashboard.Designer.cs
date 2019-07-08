@@ -148,6 +148,7 @@ namespace C969_Project
             this.deleteApptButton.TabIndex = 5;
             this.deleteApptButton.Text = "Delete";
             this.deleteApptButton.UseVisualStyleBackColor = false;
+            this.deleteApptButton.Click += new System.EventHandler(this.DeleteApptButton_Click);
             // 
             // updateApptButton
             // 
@@ -161,6 +162,7 @@ namespace C969_Project
             this.updateApptButton.TabIndex = 4;
             this.updateApptButton.Text = "Update";
             this.updateApptButton.UseVisualStyleBackColor = false;
+            this.updateApptButton.Click += new System.EventHandler(this.UpdateApptButton_Click);
             // 
             // addApptButton
             // 
