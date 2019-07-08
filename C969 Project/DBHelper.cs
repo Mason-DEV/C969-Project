@@ -49,16 +49,14 @@ namespace C969_Project
             conn.Open();
             //Week filter where end date and start date are less than a week away
             //Month filter where end date and start date are less than a month away
-            string query = week ? $"SELECT customerId as 'Customer ID',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' and start > now() order by start;"
-                : $"SELECT  customerId as 'Customer ID', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' and start > now() order by start;";
-            Console.WriteLine(query);
+            string query = week ? $"SELECT (select customerName from customer where customerId = appointment.customerId) as 'Customer',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' and end > now() order by start;"
+                : $"SELECT  (select customerName from customer where customerId = appointment.customerId) as 'Customer', start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where start < '{filter}' and end < '{filter}' and createdBy = '{DBHelper.getCurrentUserId()}' and end > now() order by start;";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             DataTable dt = new DataTable();
             dt.Load(cmd.ExecuteReader());
             //Converts the time to localtime from utc in DB
             foreach (DataRow row in dt.Rows)
             {
-                Console.WriteLine(row);
                 DateTime utcStart = Convert.ToDateTime(row["Start Time"]);
                 DateTime utcEnd = Convert.ToDateTime(row["End Time"]);
                 row["Start Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcStart);
@@ -67,28 +65,7 @@ namespace C969_Project
 
             conn.Close();
             return dt;
-            /*
 
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataAdapter sqlDataAdap = new MySqlDataAdapter(query, conn);
-
-            DataTable dtRecord = new DataTable();
-            sqlDataAdap.Fill(dtRecord);
-            sqlDataAdap.Update(dtRecord);
-            conn.Close();
-
-            //Converts the time to localtime from utc in DB
-            foreach (DataRow row in dtRecord.Rows)
-            {
-                DateTime utcStart = Convert.ToDateTime(row["Start Time"]);
-                DateTime utcEnd = Convert.ToDateTime(row["End Time"]);
-                row["Start Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcStart);
-                row["End Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcEnd);
-            }
-
-            Console.WriteLine(dtRecord);
-            return dtRecord;
-            */
         }
 
         public static int userCheck(string user, string pass)
@@ -130,8 +107,6 @@ namespace C969_Project
         {
 
             string sqlDate = dateSQLFormat(dateTime);
-            Console.WriteLine(dateTime);
-            Console.WriteLine(sqlDate);
 
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
@@ -375,20 +350,6 @@ namespace C969_Project
             }
         }
 
-        //Updates the database of all values assoicated with updating customer record
-        /*
-            Key = customerId, Value = 2
-            Key = customerName, Value = Mason
-            Key = addressId, Value = 3
-            Key = active, Value = 1
-            Key = address, Value = Ivory Dr
-            Key = cityId, Value = 6
-            Key = postalCode, Value = 33573
-            Key = phone, Value = 7275973188
-            Key = city, Value = Ruskin
-            Key = countryId, Value = 14
-            Key = country, Value = USA
-        */
 
         public static void updateCustomer(IDictionary<string, object> dictionary)
         {
@@ -498,7 +459,6 @@ namespace C969_Project
             //text contact, text type, varchar 255 url, datetime start, datetime end, datetime createDate, varchar40 createdby, varchar 40 updatedby
 
             int appointID = getID("appointment", "appointmentId") + 1;
-            Console.WriteLine(appointID);
             int userID = 1;
 
             DateTime utc = getDateTime();
@@ -528,7 +488,7 @@ namespace C969_Project
             MySqlTransaction transaction = conn.BeginTransaction();
             var query = $"UPDATE appointment" +
                 $" SET customerId = '{dictionary["customerId"]}', title = '{dictionary["title"]}', description = '{dictionary["description"]}' , location = '{dictionary["location"]}' , contact = '{dictionary["contact"]}' , " +
-                $" type = '{dictionary["type"]}' ,  start = '{dateSQLFormat(start)}' , end = '{dateSQLFormat(end)}' , url = '{dictionary["url"]}' , lastUpdate = '{dateSQLFormat(utc)}',  lastUpdateBy = '{user}' " +
+                $" type = '{dictionary["type"]}' ,  start = '{dateSQLFormat(start.ToUniversalTime())}' , end = '{dateSQLFormat(end.ToUniversalTime())}' , url = '{dictionary["url"]}' , lastUpdate = '{dateSQLFormat(utc)}',  lastUpdateBy = '{user}' " +
                 $" WHERE appointmentId = '{dictionary["appointmentId"]}'";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             cmd.Transaction = transaction;
@@ -560,7 +520,6 @@ namespace C969_Project
 
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            //ample: “You have a meeting with Client X at 2PM” (Most specific) //Best
             var query = " Select start, (select customerName from customer where customerId = appointment.customerId ) as 'Name' from appointment  where start > now() order by  start limit 1;";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -574,30 +533,126 @@ namespace C969_Project
 
             return appointINFO;
         }
-        /*
-        public static DateTime? getNextAppointStart()
+
+        public static int overlap(DateTime start, DateTime end)
         {
             MySqlConnection conn = new MySqlConnection(dataString);
             conn.Open();
-            //ample: “You have a meeting with Client X at 2PM” (Most specific) //Best
-            var query = "Select start, location from appointment where start > now() order by  start limit 1;";
+            var query = $"SELECT count(*) FROM `appointment` WHERE (('{dateSQLFormat(start.ToUniversalTime())}' > start and '{dateSQLFormat(start.ToUniversalTime())}' < end) or ('{dateSQLFormat(end.ToUniversalTime())}'> start and '{dateSQLFormat(end.ToUniversalTime())}' < end)) and end > now() order by  start limit 1;";
             MySqlCommand cmd = new MySqlCommand(query, conn);
             MySqlDataReader rdr = cmd.ExecuteReader();
-
             if (rdr.HasRows)
             {
                 rdr.Read();
-                if (rdr[0] == DBNull.Value)
-                {
-
-                    return null;
-                }
-
-                return
+                string count = rdr[0].ToString();
+                int result = count == "0" ? 0 : 1;
+                return result;
             }
-            return null;
+            return 0;
         }
-        */
+
+
+        public static DataTable schedule(string id)
+        {
+
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            //Week filter where end date and start date are less than a week away
+            //Month filter where end date and start date are less than a month away
+            string query = $"SELECT (select customerName from customer where customerId = appointment.customerId) as 'Customer',  start as 'Start Time', end as 'End Time', location as 'Location', title as 'Title' FROM appointment where createdBy = '{id}' order by start;";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            DataTable dt = new DataTable();
+            dt.Load(cmd.ExecuteReader());
+            //Converts the time to localtime from utc in DB
+            foreach (DataRow row in dt.Rows)
+            {
+                DateTime utcStart = Convert.ToDateTime(row["Start Time"]);
+                DateTime utcEnd = Convert.ToDateTime(row["End Time"]);
+                row["Start Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcStart);
+                row["End Time"] = TimeZone.CurrentTimeZone.ToLocalTime(utcEnd);
+            }
+
+            conn.Close();
+            return dt;
+        }
+
+        public static Dictionary<string, object> reportAppoint(string item)
+        {
+            Dictionary<string, object> reportINFO = new Dictionary<string, object>();
+
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            var query = $"select distinct" +
+                $"              (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 1) as 'Jan'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 2) as 'Feb'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 3) as 'Mar'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 4) as 'Apr'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 5) as 'May'," +
+                $"            (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 6) as 'Jun'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 7) as 'Jul'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 8) as 'Aug'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 9) as 'Sep'," +
+                $"            (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 10) as 'Oct'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 11) as 'Nov'," +
+                $"                (select count(type) from appointment where type = '{item}' and MONTH(appointment.start) = 12) as 'Dec'" +
+                $"            from appointment;";
+
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                reportINFO.Add("Jan", rdr[0]);
+                reportINFO.Add("Feb", rdr[1]);
+                reportINFO.Add("Mar", rdr[2]);
+                reportINFO.Add("Apr", rdr[3]);
+                reportINFO.Add("May", rdr[4]);
+                reportINFO.Add("Jun", rdr[5]);
+                reportINFO.Add("Jul", rdr[6]);
+                reportINFO.Add("Aug", rdr[7]);
+                reportINFO.Add("Sep", rdr[8]);
+                reportINFO.Add("Oct", rdr[9]);
+                reportINFO.Add("Nov", rdr[10]);
+                reportINFO.Add("Dec", rdr[11]);
+            }
+
+            return reportINFO;
+        }
+
+        public static bool appointExist(string custID)
+        {
+            Console.WriteLine(custID);
+
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            var query = $"select* from appointment where customerId = '{custID}'";
+
+
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                rdr.Read();
+                return true;
+            }
+            return false;
+        }
+
+        public static void noCustAppointments(string custID)
+        {
+            MySqlConnection conn = new MySqlConnection(dataString);
+            conn.Open();
+            var query = $"DELETE FROM appointment" +
+               $" WHERE customerId = '{custID}'";
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlTransaction transaction = conn.BeginTransaction();
+            cmd.CommandText = query;
+            cmd.Connection = conn;
+            cmd.Transaction = transaction;
+            cmd.ExecuteNonQuery();
+            transaction.Commit();
+            conn.Close();
+        }
     }
 }
 

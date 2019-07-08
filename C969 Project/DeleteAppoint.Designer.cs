@@ -39,7 +39,6 @@
             this.startLabel = new System.Windows.Forms.Label();
             this.endDTP = new System.Windows.Forms.DateTimePicker();
             this.startDTP = new System.Windows.Forms.DateTimePicker();
-            this.typeTextbox = new System.Windows.Forms.TextBox();
             this.contactTextbox = new System.Windows.Forms.TextBox();
             this.locationTextbox = new System.Windows.Forms.TextBox();
             this.descriptionTextbox = new System.Windows.Forms.TextBox();
@@ -52,6 +51,7 @@
             this.appointSelectLabel = new System.Windows.Forms.Label();
             this.appointLabel = new System.Windows.Forms.Label();
             this.appointComboBox = new System.Windows.Forms.ComboBox();
+            this.typeCombobox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // customerLabel
@@ -167,14 +167,6 @@
             this.startDTP.Size = new System.Drawing.Size(192, 20);
             this.startDTP.TabIndex = 91;
             // 
-            // typeTextbox
-            // 
-            this.typeTextbox.Enabled = false;
-            this.typeTextbox.Location = new System.Drawing.Point(120, 297);
-            this.typeTextbox.Name = "typeTextbox";
-            this.typeTextbox.Size = new System.Drawing.Size(192, 20);
-            this.typeTextbox.TabIndex = 90;
-            // 
             // contactTextbox
             // 
             this.contactTextbox.Enabled = false;
@@ -281,11 +273,29 @@
             this.appointComboBox.Size = new System.Drawing.Size(192, 21);
             this.appointComboBox.TabIndex = 78;
             // 
+            // typeCombobox
+            // 
+            this.typeCombobox.Enabled = false;
+            this.typeCombobox.FormattingEnabled = true;
+            this.typeCombobox.Items.AddRange(new object[] {
+            "Event",
+            "Follow Up",
+            "Initial Consultation",
+            "Lab Visit",
+            "Other",
+            "Physical",
+            "Sugery"});
+            this.typeCombobox.Location = new System.Drawing.Point(120, 292);
+            this.typeCombobox.Name = "typeCombobox";
+            this.typeCombobox.Size = new System.Drawing.Size(192, 21);
+            this.typeCombobox.TabIndex = 101;
+            // 
             // DeleteAppoint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(343, 565);
+            this.Controls.Add(this.typeCombobox);
             this.Controls.Add(this.customerLabel);
             this.Controls.Add(this.customerComboBox);
             this.Controls.Add(this.clearButton);
@@ -296,7 +306,6 @@
             this.Controls.Add(this.startLabel);
             this.Controls.Add(this.endDTP);
             this.Controls.Add(this.startDTP);
-            this.Controls.Add(this.typeTextbox);
             this.Controls.Add(this.contactTextbox);
             this.Controls.Add(this.locationTextbox);
             this.Controls.Add(this.descriptionTextbox);
@@ -330,7 +339,6 @@
         private System.Windows.Forms.Label startLabel;
         private System.Windows.Forms.DateTimePicker endDTP;
         private System.Windows.Forms.DateTimePicker startDTP;
-        private System.Windows.Forms.TextBox typeTextbox;
         private System.Windows.Forms.TextBox contactTextbox;
         private System.Windows.Forms.TextBox locationTextbox;
         private System.Windows.Forms.TextBox descriptionTextbox;
@@ -343,5 +351,6 @@
         private System.Windows.Forms.Label appointSelectLabel;
         private System.Windows.Forms.Label appointLabel;
         private System.Windows.Forms.ComboBox appointComboBox;
+        private System.Windows.Forms.ComboBox typeCombobox;
     }
 }

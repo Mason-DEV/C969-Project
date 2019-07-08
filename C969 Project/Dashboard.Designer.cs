@@ -256,7 +256,7 @@ namespace C969_Project
             this.loginsReportButton.Name = "loginsReportButton";
             this.loginsReportButton.Size = new System.Drawing.Size(121, 31);
             this.loginsReportButton.TabIndex = 5;
-            this.loginsReportButton.Text = "Logins Report";
+            this.loginsReportButton.Text = "Timecard";
             this.loginsReportButton.UseVisualStyleBackColor = false;
             this.loginsReportButton.Click += new System.EventHandler(this.cusReportButton_Click);
             // 

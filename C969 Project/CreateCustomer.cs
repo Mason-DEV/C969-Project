@@ -90,8 +90,7 @@ namespace C969_Project
 
         private void showError(string item)
         {
-            Console.WriteLine("called");
-            MessageBox.Show("Please enter a valid information for " + item);
+         MessageBox.Show("Please enter a valid information for " + item);
 
         }
     }

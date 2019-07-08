@@ -90,20 +90,13 @@ namespace C969_Project
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-            //TODO:
-            //Grab customer ID value
-            //Search DBs with ID value
-            //IF we get a single result, unlock fields and input info into text fields
-            //Else display no match found warning
-
-
+           
             //Grabs ID
             DataRowView drv = custComboBox.SelectedItem as DataRowView;
             int id = Convert.ToInt32(custComboBox.SelectedValue);
             var custList = DBHelper.searchCustomer(id);
             setCustList(custList);
             //Calls db helper to get all customer results as object array
-            //object[] custArray = null; //DBHelper.searchCustomer(id);
             //If we got a null array, don't continue
             if (custList != null)
             {

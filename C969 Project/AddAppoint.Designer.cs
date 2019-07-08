@@ -33,7 +33,6 @@
             this.appointLabel = new System.Windows.Forms.Label();
             this.custLabel = new System.Windows.Forms.Label();
             this.createCusButton = new System.Windows.Forms.Button();
-            this.typeTextbox = new System.Windows.Forms.TextBox();
             this.contactTextbox = new System.Windows.Forms.TextBox();
             this.locationTextbox = new System.Windows.Forms.TextBox();
             this.descriptionTextbox = new System.Windows.Forms.TextBox();
@@ -47,6 +46,8 @@
             this.endDTP = new System.Windows.Forms.DateTimePicker();
             this.startLabel = new System.Windows.Forms.Label();
             this.endLabel = new System.Windows.Forms.Label();
+            this.cancelButton = new System.Windows.Forms.Button();
+            this.typeCombobox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // custComboBox
@@ -81,20 +82,13 @@
             this.createCusButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.createCusButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.createCusButton.ForeColor = System.Drawing.SystemColors.Control;
-            this.createCusButton.Location = new System.Drawing.Point(154, 411);
+            this.createCusButton.Location = new System.Drawing.Point(60, 413);
             this.createCusButton.Name = "createCusButton";
             this.createCusButton.Size = new System.Drawing.Size(96, 31);
             this.createCusButton.TabIndex = 36;
             this.createCusButton.Text = "Create";
             this.createCusButton.UseVisualStyleBackColor = false;
             this.createCusButton.Click += new System.EventHandler(this.CreateCusButton_Click);
-            // 
-            // typeTextbox
-            // 
-            this.typeTextbox.Location = new System.Drawing.Point(154, 260);
-            this.typeTextbox.Name = "typeTextbox";
-            this.typeTextbox.Size = new System.Drawing.Size(192, 20);
-            this.typeTextbox.TabIndex = 47;
             // 
             // contactTextbox
             // 
@@ -207,16 +201,47 @@
             this.endLabel.TabIndex = 53;
             this.endLabel.Text = "End Time:";
             // 
+            // cancelButton
+            // 
+            this.cancelButton.BackColor = System.Drawing.Color.RoyalBlue;
+            this.cancelButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cancelButton.ForeColor = System.Drawing.SystemColors.Control;
+            this.cancelButton.Location = new System.Drawing.Point(250, 413);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(96, 31);
+            this.cancelButton.TabIndex = 54;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = false;
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // typeCombobox
+            // 
+            this.typeCombobox.FormattingEnabled = true;
+            this.typeCombobox.Items.AddRange(new object[] {
+            "Event",
+            "Follow Up",
+            "Initial Consultation",
+            "Lab Visit",
+            "Other",
+            "Physical",
+            "Surgery"});
+            this.typeCombobox.Location = new System.Drawing.Point(154, 263);
+            this.typeCombobox.Name = "typeCombobox";
+            this.typeCombobox.Size = new System.Drawing.Size(192, 21);
+            this.typeCombobox.TabIndex = 55;
+            // 
             // AddAppoint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(383, 487);
+            this.Controls.Add(this.typeCombobox);
+            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.endLabel);
             this.Controls.Add(this.startLabel);
             this.Controls.Add(this.endDTP);
             this.Controls.Add(this.startDTP);
-            this.Controls.Add(this.typeTextbox);
             this.Controls.Add(this.contactTextbox);
             this.Controls.Add(this.locationTextbox);
             this.Controls.Add(this.descriptionTextbox);
@@ -245,7 +270,6 @@
         private System.Windows.Forms.Label appointLabel;
         private System.Windows.Forms.Label custLabel;
         private System.Windows.Forms.Button createCusButton;
-        private System.Windows.Forms.TextBox typeTextbox;
         private System.Windows.Forms.TextBox contactTextbox;
         private System.Windows.Forms.TextBox locationTextbox;
         private System.Windows.Forms.TextBox descriptionTextbox;
@@ -259,5 +283,7 @@
         private System.Windows.Forms.DateTimePicker endDTP;
         private System.Windows.Forms.Label startLabel;
         private System.Windows.Forms.Label endLabel;
+        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.ComboBox typeCombobox;
     }
 }

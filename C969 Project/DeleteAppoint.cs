@@ -95,6 +95,8 @@ namespace C969_Project
                         (option as RadioButton).Checked = false;
                     else if (option is DateTimePicker)
                         (option as DateTimePicker).Value = DateTime.Now;
+                    else if (option is ComboBox)
+                        (option as ComboBox).SelectedIndex = -1;
                     else
                         clearIT(option.Controls);
             };
@@ -113,7 +115,7 @@ namespace C969_Project
 
             try
             {
-                string query = "select appointmentId, concat(appointmentId, (select  concat(' -- Customer: ', customerName) from customer where appointment.customerId = customer.customerId))  as Display from appointment;";
+                string query = "select appointmentId, concat(appointmentId, (select  concat(' -- Customer: ', customerName) from customer where appointment.customerId = customer.customerId))  as Display from appointment where end > now();";
                 MySqlDataAdapter da = new MySqlDataAdapter(query, conn);
                 conn.Open();
                 DataSet ds = new DataSet();
@@ -159,7 +161,7 @@ namespace C969_Project
             descriptionTextbox.Text = AppointList.First(kvp => kvp.Key == "description").Value.ToString();
             locationTextbox.Text = AppointList.First(kvp => kvp.Key == "location").Value.ToString();
             contactTextbox.Text = AppointList.First(kvp => kvp.Key == "contact").Value.ToString();
-            typeTextbox.Text = AppointList.First(kvp => kvp.Key == "type").Value.ToString();
+            typeCombobox.SelectedIndex = typeCombobox.FindStringExact(AppointList.First(kvp => kvp.Key == "type").Value.ToString());
             string start = AppointList.First(kvp => kvp.Key == "start").Value.ToString();
             string end = AppointList.First(kvp => kvp.Key == "end").Value.ToString();
             startDTP.Value = Convert.ToDateTime(start).ToLocalTime();
